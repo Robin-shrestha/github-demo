@@ -1,1 +1,3 @@
 new text
+
+feature 2
