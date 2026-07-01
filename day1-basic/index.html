@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Day 1 — HTML & CSS Demo</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <header>
+      <h1>LF Connect</h1>
+      <p>Fullstack Bootcamp — Week 1</p>
+    </header>
+
+    <main>
+      <section class="intro">
+        <h2>What is HTML?</h2>
+        <p>
+          HTML gives a page its <strong>structure</strong>. Think of it as the
+          skeleton — CSS adds the skin.
+        </p>
+        <a
+          href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements"
+          >Semantic Tags</a
+        >
+      </section>
+
+      <section class="semantics">
+        <h2>Common Semantic Tags</h2>
+        <p class="semantics__note">
+          Semantic tags carry <strong>meaning</strong>. A
+          <code>&lt;div&gt;</code> says nothing — a
+          <code>&lt;article&gt;</code> tells everyone "this is self-contained
+          content."
+        </p>
+
+        <table class="tag-table">
+          <thead>
+            <tr>
+              <th>Tag</th>
+              <th>Use it when…</th>
+              <th>Don't confuse it with</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>&lt;header&gt;</code></td>
+              <td>
+                Introductory content for a page or section — logo, nav, headline
+              </td>
+              <td>
+                <code>&lt;head&gt;</code> (that's metadata, not visible content)
+              </td>
+            </tr>
+            <tr>
+              <td><code>&lt;nav&gt;</code></td>
+              <td>
+                A set of navigation links — main menu, breadcrumbs, pagination
+              </td>
+              <td>Any group of links; only use for primary navigation</td>
+            </tr>
+            <tr>
+              <td><code>&lt;main&gt;</code></td>
+              <td>The dominant content of the page — use only once per page</td>
+              <td>
+                <code>&lt;body&gt;</code> — body wraps everything; main wraps
+                the core content
+              </td>
+            </tr>
+            <tr>
+              <td><code>&lt;section&gt;</code></td>
+              <td>
+                A thematic grouping with its own heading (e.g. "About",
+                "Features")
+              </td>
+              <td>
+                <code>&lt;div&gt;</code> — use div for styling hooks, section
+                for meaning
+              </td>
+            </tr>
+            <tr>
+              <td><code>&lt;article&gt;</code></td>
+              <td>
+                Self-contained content that makes sense on its own — blog post,
+                card, comment
+              </td>
+              <td>
+                <code>&lt;section&gt;</code> — article stands alone; section is
+                part of a whole
+              </td>
+            </tr>
+            <tr>
+              <td><code>&lt;aside&gt;</code></td>
+              <td>
+                Content tangentially related to the main content — sidebar, pull
+                quote, ad
+              </td>
+              <td>Anything central to the page; aside is supplementary</td>
+            </tr>
+            <tr>
+              <td><code>&lt;footer&gt;</code></td>
+              <td>
+                Closing content — copyright, links, contact info (page or
+                section level)
+              </td>
+              <td>
+                Only the page bottom; a card can also have a
+                <code>&lt;footer&gt;</code>
+              </td>
+            </tr>
+            <tr>
+              <td><code>&lt;h1&gt;–&lt;h6&gt;</code></td>
+              <td>
+                Headings in descending importance — one
+                <code>&lt;h1&gt;</code> per page
+              </td>
+              <td>Bold text; never skip levels (h1 → h3) for visual sizing</td>
+            </tr>
+            <tr>
+              <td><code>&lt;p&gt;</code></td>
+              <td>A paragraph of text</td>
+              <td>
+                <code>&lt;br&gt;</code> — use p for blocks of text, not line
+                breaks
+              </td>
+            </tr>
+            <tr>
+              <td><code>&lt;ul&gt; / &lt;ol&gt; / &lt;li&gt;</code></td>
+              <td>
+                Unordered list (bullets) or ordered list (numbers) with list
+                items
+              </td>
+              <td>
+                Manually numbered paragraphs — always use the proper list
+                element
+              </td>
+            </tr>
+            <tr>
+              <td><code>&lt;a&gt;</code></td>
+              <td>A hyperlink — navigation, external links, anchor jumps</td>
+              <td>
+                <code>&lt;button&gt;</code> — use a for navigation, button for
+                actions
+              </td>
+            </tr>
+            <tr>
+              <td><code>&lt;button&gt;</code></td>
+              <td>A clickable action — submit, toggle, open modal</td>
+              <td>
+                <code>&lt;a&gt;</code> — buttons do things, links go places
+              </td>
+            </tr>
+            <tr>
+              <td><code>&lt;img&gt;</code></td>
+              <td>
+                An image that is part of the content — always include
+                <code>alt</code>
+              </td>
+              <td>
+                Decorative images; those belong in CSS as
+                <code>background-image</code>
+              </td>
+            </tr>
+            <tr>
+              <td><code>&lt;form&gt;</code></td>
+              <td>
+                A collection of inputs the user submits — login, search, signup
+              </td>
+              <td>
+                Wrapping every input; only wrap inputs that are submitted
+                together
+              </td>
+            </tr>
+            <tr>
+              <td><code>&lt;input&gt; / &lt;label&gt;</code></td>
+              <td>
+                A form field and its label — always pair them for accessibility
+              </td>
+              <td>
+                Using placeholder text as the label — placeholder disappears on
+                type
+              </td>
+            </tr>
+            <tr>
+              <td><code>&lt;strong&gt; / &lt;em&gt;</code></td>
+              <td>
+                <code>strong</code> = important (bold), <code>em</code> =
+                emphasis (italic)
+              </td>
+              <td>
+                <code>&lt;b&gt;</code> / <code>&lt;i&gt;</code> — those are
+                purely visual with no meaning
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="cards">
+        <h2>Student Cards</h2>
+
+        <div class="card">
+          <img
+            src="https://i.pravatar.cc/300?img=1"
+            alt="Student avatar"
+            class="card__image"
+          />
+          <div class="card__body">
+            <h3 class="card__name">Aarav Sharma</h3>
+            <p class="card__role">Frontend Track</p>
+          </div>
+          <div class="card__footer">
+            <a href="#" class="btn">View Profile</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <img
+            src="https://i.pravatar.cc/300?img=5"
+            alt="Student avatar"
+            class="card__image"
+          />
+          <div class="card__body">
+            <h3 class="card__name">Priya Thapa</h3>
+            <p class="card__role">Backend Track</p>
+          </div>
+          <div class="card__footer">
+            <a href="#" class="btn">View Profile</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <img
+            src="https://i.pravatar.cc/300?img=12"
+            alt="Student avatar"
+            class="card__image"
+          />
+          <div class="card__body">
+            <h3 class="card__name">Bikash Rai</h3>
+            <p class="card__role">Fullstack Track</p>
+          </div>
+          <div class="card__footer">
+            <a href="#" class="btn">View Profile</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="boxmodel-demo">
+        <h2>The Box Model</h2>
+        <p>
+          Every element is a box:
+          <code>content → padding → border → margin</code>
+        </p>
+        <div class="box">I am a box</div>
+      </section>
+    </main>
+
+    <footer>
+      <p>LF Technology · Fullstack Course 2026</p>
+    </footer>
+  </body>
+</html>

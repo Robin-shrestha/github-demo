@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Day 2 — Flexbox Properties</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <header>
+      <div class="header__brand">
+        <h1>LF Connect</h1>
+        <p>Fullstack Bootcamp — Day 2: Flexbox Deep Dive</p>
+      </div>
+      <a href="../day1-basic/index.html" class="header__link">
+        ← View Day 1 (No Flex)
+      </a>
+    </header>
+
+    <main>
+      <section class="intro">
+        <h2>Two roles in Flexbox</h2>
+        <p>
+          Every flex property belongs to one of two roles. Knowing which is
+          which stops most of the confusion.
+        </p>
+        <div class="roles">
+          <div class="role role--container">
+            <h3>Container properties</h3>
+            <p>
+              Set on the <strong>parent</strong>. Control how children are
+              arranged.
+            </p>
+            <ul>
+              <li><code>display: flex</code></li>
+              <li><code>flex-direction</code></li>
+              <li><code>justify-content</code></li>
+              <li><code>align-items</code></li>
+              <li><code>flex-wrap</code></li>
+              <li><code>gap</code></li>
+            </ul>
+          </div>
+          <div class="role role--item">
+            <h3>Item properties</h3>
+            <p>
+              Set on the <strong>children</strong>. Control how each child
+              behaves.
+            </p>
+            <ul>
+              <li><code>flex-grow</code></li>
+              <li><code>flex-shrink</code></li>
+              <li><code>flex-basis</code></li>
+              <li><code>flex</code> (shorthand)</li>
+              <li><code>align-self</code></li>
+              <li><code>order</code></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════
+           CONTAINER PROPERTIES
+      ══════════════════════════════════════════════ -->
+
+      <!-- 1. flex-direction -->
+      <section class="demo-section">
+        <h2>1. flex-direction</h2>
+        <p class="demo-desc">
+          Defines the <strong>main axis</strong> — the direction items flow.
+          Default is <code>row</code> (left to right).
+        </p>
+
+        <p class="demo-label">row (default)</p>
+        <div class="flex-demo flex-dir--row">
+          <div class="item">1</div>
+          <div class="item" style="width: 100px">2</div>
+          <div class="item">3</div>
+        </div>
+
+        <p class="demo-label">row-reverse</p>
+        <div class="flex-demo flex-dir--row-reverse">
+          <div class="item">1</div>
+          <div class="item">2</div>
+          <div class="item">3</div>
+        </div>
+
+        <p class="demo-label">column</p>
+        <div class="flex-demo flex-dir--column">
+          <div class="item">1</div>
+          <div class="item">2</div>
+          <div class="item">3</div>
+        </div>
+
+        <p class="demo-label">column-reverse</p>
+        <div class="flex-demo flex-dir--column-reverse">
+          <div class="item">1</div>
+          <div class="item">2</div>
+          <div class="item">3</div>
+        </div>
+      </section>
+
+      <!-- 2. justify-content -->
+      <section class="demo-section">
+        <h2>2. justify-content</h2>
+        <p class="demo-desc">
+          Aligns items along the <strong>main axis</strong> (horizontal in a
+          row). Controls how leftover space is distributed.
+        </p>
+
+        <p class="demo-label">flex-start (default)</p>
+        <div class="flex-demo jc--flex-start">
+          <div class="item">A</div>
+          <div class="item">B</div>
+          <div class="item">C</div>
+        </div>
+
+        <p class="demo-label">center</p>
+        <div class="flex-demo jc--center">
+          <div class="item">A</div>
+          <div class="item">B</div>
+          <div class="item">C</div>
+        </div>
+
+        <p class="demo-label">flex-end</p>
+        <div class="flex-demo jc--flex-end">
+          <div class="item">A</div>
+          <div class="item">B</div>
+          <div class="item">C</div>
+        </div>
+
+        <p class="demo-label">
+          space-between — first &amp; last touch the edges
+        </p>
+        <div class="flex-demo jc--space-between">
+          <div class="item">A</div>
+          <div class="item">B</div>
+          <div class="item">C</div>
+          <div class="item">D</div>
+        </div>
+
+        <p class="demo-label">space-around — equal space around each item</p>
+        <div class="flex-demo jc--space-around">
+          <div class="item">A</div>
+          <div class="item">B</div>
+          <div class="item">C</div>
+        </div>
+
+        <p class="demo-label">space-evenly — equal space between everything</p>
+        <div class="flex-demo jc--space-evenly">
+          <div class="item">A</div>
+          <div class="item">B</div>
+          <div class="item">C</div>
+        </div>
+      </section>
+
+      <!-- 3. align-items -->
+      <section class="demo-section">
+        <h2>3. align-items</h2>
+        <p class="demo-desc">
+          Aligns items along the <strong>cross axis</strong> (vertical in a
+          row). This is the property that finally centres things vertically.
+        </p>
+
+        <p class="demo-label">
+          stretch (default) — items fill the container height
+        </p>
+        <div class="flex-demo ai-demo ai--stretch">
+          <div class="item">A</div>
+          <div class="item item--tall">B<br />tall</div>
+          <div class="item">C</div>
+        </div>
+
+        <p class="demo-label">flex-start — items hug the top</p>
+        <div class="flex-demo ai-demo ai--flex-start">
+          <div class="item">A</div>
+          <div class="item item--tall">B<br />tall</div>
+          <div class="item">C</div>
+        </div>
+
+        <p class="demo-label">center — vertically centred</p>
+        <div class="flex-demo ai-demo ai--center">
+          <div class="item">A</div>
+          <div class="item item--tall">B<br />tall</div>
+          <div class="item">C</div>
+        </div>
+
+        <p class="demo-label">flex-end — items hug the bottom</p>
+        <div class="flex-demo ai-demo ai--flex-end">
+          <div class="item">A</div>
+          <div class="item item--tall">B<br />tall</div>
+          <div class="item">C</div>
+        </div>
+
+        <p class="demo-label">baseline — items align by their text baseline</p>
+        <div class="flex-demo ai-demo ai--baseline">
+          <div class="item item--sm">small</div>
+          <div class="item item--lg">BIG</div>
+          <div class="item">mid</div>
+        </div>
+      </section>
+
+      <!-- 4. flex-wrap -->
+      <section class="demo-section">
+        <h2>4. flex-wrap</h2>
+        <p class="demo-desc">
+          By default flex items squeeze onto one line (<code>nowrap</code>).
+          <code>wrap</code> lets them spill onto the next line instead of
+          shrinking.
+        </p>
+
+        <p class="demo-label">nowrap (default) — items shrink to fit</p>
+        <div class="flex-demo wrap--nowrap">
+          <div class="item">One</div>
+          <div class="item">Two</div>
+          <div class="item">Three</div>
+          <div class="item">Four</div>
+          <div class="item">Five</div>
+          <div class="item">Six</div>
+        </div>
+
+        <p class="demo-label">wrap — items flow onto the next line</p>
+        <div class="flex-demo wrap--wrap">
+          <div class="item">One</div>
+          <div class="item">Two</div>
+          <div class="item">Three</div>
+          <div class="item">Four</div>
+          <div class="item">Five</div>
+          <div class="item">Six</div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════
+           ITEM PROPERTIES
+      ══════════════════════════════════════════════ -->
+
+      <!-- 5. flex-grow -->
+      <section class="demo-section">
+        <h2>5. flex-grow</h2>
+        <p class="demo-desc">
+          Tells an item how much of the <strong>leftover space</strong> to
+          claim. <code>0</code> = don't grow (default). <code>1</code> = take a
+          share. Higher numbers claim proportionally more.
+        </p>
+
+        <p class="demo-label">no flex-grow — items stay at natural size</p>
+        <div class="flex-demo">
+          <div class="item">A</div>
+          <div class="item">B</div>
+          <div class="item">C</div>
+        </div>
+
+        <p class="demo-label">
+          all items <code>flex-grow: 1</code> — share space equally
+        </p>
+        <div class="flex-demo grow--equal">
+          <div class="item">A</div>
+          <div class="item">B</div>
+          <div class="item">C</div>
+        </div>
+
+        <p class="demo-label">
+          A=1, B=2, C=1 — B gets twice as much extra space
+        </p>
+        <div class="flex-demo">
+          <div class="item grow-1">A<br /><small>grow:1</small></div>
+          <div class="item grow-2">B<br /><small>grow:2</small></div>
+          <div class="item grow-1">C<br /><small>grow:1</small></div>
+        </div>
+      </section>
+
+      <!-- 6. flex-basis -->
+      <section class="demo-section">
+        <h2>6. flex-basis</h2>
+        <p class="demo-desc">
+          Sets the <strong>starting size</strong> of an item before remaining
+          space is distributed. Think of it as the item's "ideal width" (or
+          height in a column). <code>auto</code> = use the item's content size.
+        </p>
+
+        <p class="demo-label">
+          <code>flex-basis: auto</code> — sized by content
+        </p>
+        <div class="flex-demo">
+          <div class="item">Short</div>
+          <div class="item">A longer label</div>
+          <div class="item">Mid</div>
+        </div>
+
+        <p class="demo-label">
+          <code>flex-basis: 200px</code> — all start at 200px
+        </p>
+        <div class="flex-demo basis--200">
+          <div class="item" style="flex-grow: 1">Short</div>
+          <div class="item" style="flex-basis: 40%">A longer label</div>
+          <div class="item">Mid</div>
+        </div>
+      </section>
+
+      <!-- 7. flex shorthand -->
+      <section class="demo-section">
+        <h2>7. flex shorthand</h2>
+        <p class="demo-desc">
+          <code>flex: grow shrink basis</code> — the three item properties in
+          one. <code>flex: 1</code> is shorthand for
+          <code>flex: 1 1 0</code> and is the most common value you'll write in
+          real projects.
+        </p>
+
+        <div class="shorthand-table">
+          <div class="shorthand-row shorthand-row--header">
+            <span>Shorthand</span><span>Expands to</span><span>Meaning</span>
+          </div>
+          <div class="shorthand-row">
+            <code>flex: 1</code>
+            <code>flex: 1 1 0%</code>
+            <span>Grow, shrink, start from 0 — equal shares</span>
+          </div>
+          <div class="shorthand-row">
+            <code>flex: auto</code>
+            <code>flex: 1 1 auto</code>
+            <span>Grow, shrink, start from natural size</span>
+          </div>
+          <div class="shorthand-row">
+            <code>flex: none</code>
+            <code>flex: 0 0 auto</code>
+            <span>Don't grow or shrink — rigid size</span>
+          </div>
+          <div class="shorthand-row">
+            <code>flex: 0 1 200px</code>
+            <code>flex: 0 1 200px</code>
+            <span>Don't grow, can shrink, starts at 200px</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. align-self -->
+      <section class="demo-section">
+        <h2>8. align-self</h2>
+        <p class="demo-desc">
+          Like <code>align-items</code> but for a <strong>single item</strong>.
+          Overrides the container's <code>align-items</code> for that one child.
+        </p>
+
+        <div
+          class="flex-demo ai-demo align-self-demo"
+          style="align-items: center"
+        >
+          <div class="item">A</div>
+          <div class="item as--flex-start">B</div>
+          <div class="item">C</div>
+          <div class="item">D</div>
+          <!-- <div class="item as--flex-start">flex-start</div>
+          <div class="item as--center">center</div>
+          <div class="item as--flex-end">flex-end</div>
+          <div class="item as--stretch">stretch</div> -->
+        </div>
+      </section>
+
+      <!-- 9. order -->
+      <section class="demo-section">
+        <h2>9. order</h2>
+        <p class="demo-desc">
+          Changes the <strong>visual order</strong> of items without touching
+          the HTML. Default is <code>0</code>. Lower numbers appear first.
+          Useful for responsive reordering — but don't use it for content that
+          screen readers need in a specific order.
+        </p>
+
+        <div class="flex-demo order-demo">
+          <div class="item ord--3">HTML: 1st<br /><small>order: 3</small></div>
+          <div class="item ord--1">HTML: 2nd<br /><small>order: 1</small></div>
+          <div class="item ord--2">HTML: 3rd<br /><small>order: 2</small></div>
+        </div>
+        <p class="demo-desc" style="margin-top: 8px">
+          ↑ Items are rendered 2nd → 3rd → 1st despite HTML order being 1 → 2 →
+          3.
+        </p>
+      </section>
+
+      <section style="margin-bottom: 10px; font-weight: 700">
+        Reference Link for more on flexbox:
+        <a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/"
+          >Css Tricks Flexbox</a
+        >
+      </section>
+
+      <section class="cards-section">
+        <h2>Student Cards <span class="badge">flex layout</span></h2>
+        <p class="demo-desc">
+          The card row uses
+          <code>display: flex; flex-wrap: wrap; gap: 24px</code>. Each card uses
+          <code>flex-direction: column</code> with <code>flex: 1</code>
+          on the body so the footer always pins to the bottom.
+        </p>
+
+        <div class="cards">
+          <div class="card">
+            <img
+              src="https://i.pravatar.cc/300?img=1"
+              alt="Student avatar"
+              class="card__image"
+            />
+            <div class="card__body">
+              <h3 class="card__name">Aarav Sharma</h3>
+              <p class="card__role">Frontend Track</p>
+            </div>
+            <div class="card__footer">
+              <a href="#" class="btn">View Profile</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <img
+              src="https://i.pravatar.cc/300?img=5"
+              alt="Student avatar"
+              class="card__image"
+            />
+            <div class="card__body">
+              <h3 class="card__name">Priya Thapa</h3>
+              <p class="card__role">Backend Track</p>
+            </div>
+            <div class="card__footer">
+              <a href="#" class="btn">View Profile</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <img
+              src="https://i.pravatar.cc/300?img=12"
+              alt="Student avatar"
+              class="card__image"
+            />
+            <div class="card__body">
+              <h3 class="card__name">Bikash Rai</h3>
+              <p class="card__role">Fullstack Track</p>
+            </div>
+            <div class="card__footer">
+              <a href="#" class="btn">View Profile</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <img
+              src="https://i.pravatar.cc/300?img=13"
+              alt="Student avatar"
+              class="card__image"
+            />
+            <div class="card__body">
+              <h3 class="card__name">Tomaz Katze</h3>
+              <p class="card__role">QA</p>
+            </div>
+            <div class="card__footer">
+              <a href="#" class="btn">View Profile</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <img
+              src="https://i.pravatar.cc/300?img=14"
+              alt="Student avatar"
+              class="card__image"
+            />
+            <div class="card__body">
+              <h3 class="card__name">Houdini Lama</h3>
+              <p class="card__role">PM</p>
+            </div>
+            <div class="card__footer">
+              <a href="#" class="btn">View Profile</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <img
+              src="https://i.pravatar.cc/300?img=4"
+              alt="Student avatar"
+              class="card__image"
+            />
+            <div class="card__body">
+              <h3 class="card__name">Jackson</h3>
+              <p class="card__role">TM</p>
+            </div>
+            <div class="card__footer">
+              <a href="#" class="btn">View Profile</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <img
+              src="https://i.pravatar.cc/300?img=1"
+              alt="Student avatar"
+              class="card__image"
+            />
+            <div class="card__body">
+              <h3 class="card__name">Leo MEssi</h3>
+              <p class="card__role">PM</p>
+            </div>
+            <div class="card__footer">
+              <a href="#" class="btn">View Profile</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>LF Technology · Fullstack Course 2026</p>
+    </footer>
+  </body>
+</html>
