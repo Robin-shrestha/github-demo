@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Day 3 — Async JS & Fetch Demo</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <header>
+      <h1>LF Connect</h1>
+      <p>Fullstack Bootcamp — Week 2</p>
+    </header>
+
+    <main>
+      <section class="add-student">
+        <h2>Add Student</h2>
+        <form id="student-form">
+          <div class="form-row">
+            <input type="text" id="student-name" placeholder="Name" required />
+            <input type="text" id="student-role" placeholder="Role" required />
+          </div>
+
+          <fieldset class="avatar-picker">
+            <legend>Choose an avatar</legend>
+
+            <label class="avatar-option">
+              <input
+                type="radio"
+                name="avatar"
+                value="https://i.pravatar.cc/150?img=1"
+                checked
+              />
+              <img src="https://i.pravatar.cc/150?img=1" alt="Avatar 1" />
+            </label>
+
+            <label class="avatar-option">
+              <input
+                type="radio"
+                name="avatar"
+                value="https://i.pravatar.cc/150?img=5"
+              />
+              <img src="https://i.pravatar.cc/150?img=5" alt="Avatar 2" />
+            </label>
+
+            <label class="avatar-option">
+              <input
+                type="radio"
+                name="avatar"
+                value="https://i.pravatar.cc/150?img=12"
+              />
+              <img src="https://i.pravatar.cc/150?img=12" alt="Avatar 3" />
+            </label>
+
+            <label class="avatar-option">
+              <input
+                type="radio"
+                name="avatar"
+                value="https://i.pravatar.cc/150?img=20"
+              />
+              <img src="https://i.pravatar.cc/150?img=20" alt="Avatar 4" />
+            </label>
+
+            <label class="avatar-option">
+              <input
+                type="radio"
+                name="avatar"
+                value="https://i.pravatar.cc/150?img=32"
+              />
+              <img src="https://i.pravatar.cc/150?img=32" alt="Avatar 5" />
+            </label>
+          </fieldset>
+
+          <button type="submit" class="btn btn--submit">Add Student</button>
+        </form>
+      </section>
+
+      <section class="cards">
+        <h2>Student Cards</h2>
+        <p id="status" class="status"></p>
+        <div id="cards-container" class="cards-container"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>LF Technology · Fullstack Course 2026</p>
+    </footer>
+
+    <script src="build/app.js"></script>
+  </body>
+</html>

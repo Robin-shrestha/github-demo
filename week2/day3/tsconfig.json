@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "lib": ["ES2019", "DOM"],
+    "strict": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "outDir": "./build"
+  },
+  "include": [
+    "app.ts",
+    "01-callbacks-and-callback-hell.ts",
+    "02-promises.ts",
+    "03-async-await.ts",
+    "04-fetch-basics.ts"
+  ]
+}
