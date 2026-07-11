@@ -68,6 +68,83 @@
   cursor: pointer;
 }
 
+.add-student-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px;
+  border: 1px solid #e2e2e2;
+  border-radius: 8px;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.form-row input {
+  flex: 1;
+  min-width: 140px;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-row input:focus {
+  outline: none;
+  border-color: #2e5c8a;
+}
+
+.avatar-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  border: none;
+  padding: 0;
+}
+
+.avatar-picker legend {
+  width: 100%;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 6px;
+  padding: 0;
+}
+
+.avatar-option {
+  cursor: pointer;
+  line-height: 0;
+}
+
+.avatar-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.avatar-option img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid transparent;
+}
+
+.avatar-option input:checked + img {
+  border-color: #2e5c8a;
+}
+
+.btn--submit {
+  align-self: flex-start;
+  width: auto;
+  padding: 8px 20px;
+}
+
 .app-footer {
   border-top: 1px solid #eee;
   padding-top: 12px;

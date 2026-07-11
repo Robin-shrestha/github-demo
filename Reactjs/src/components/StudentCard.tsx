@@ -1,18 +1,19 @@
-const randomImage = () => {
-  const randomIndex = Math.floor(Math.random() * 10);
-  return `https://i.pravatar.cc/300?img=${randomIndex}`;
-};
+import type { Student } from "../types/types";
 
-function StudentCard() {
+interface StudentCardProps extends Student {
+  onViewProfile: (id: number) => void;
+}
+
+function StudentCard({ id, name, role, avatarUrl, onViewProfile }: StudentCardProps) {
   return (
     <div className="card">
-      <img src={randomImage()} alt="Student avatar" className="card__image" />
+      <img src={avatarUrl} alt="Student avatar" className="card__image" />
       <div className="card__body">
-        <h3 className="card__name">Aarav Sharma</h3>
-        <p className="card__role">Frontend Track</p>
+        <h3 className="card__name">{name}</h3>
+        <p className="card__role">{role}</p>
       </div>
       <div className="card__footer">
-        <button type="button" className="btn">
+        <button type="button" className="btn" onClick={() => onViewProfile(id)}>
           View Profile
         </button>
       </div>
