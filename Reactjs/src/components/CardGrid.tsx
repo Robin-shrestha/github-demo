@@ -1,31 +1,62 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import StudentCard from "./StudentCard";
 import AddStudentForm from "./AddStudentForm";
+import useStudents from "../hooks/useStudents";
 import type { Student } from "../types/types";
 
-function CardGrid() {
-  const [students, setStudents] = useState<Student[]>([]);
+// Simulated expensive computation — busy-waits ~400ms so the useMemo demo
+// below has something visible to skip.
+function expensiveSort(students: Student[]): Student[] {
+  const start = Date.now();
+  while (Date.now() - start < 500) {}
 
-  function handleViewProfile(id: number): void {
+  const sorted = [...students].sort((a, b) => a.name.localeCompare(b.name));
+  return sorted;
+}
+
+function CardGrid() {
+  const { state, addStudent, removeStudent } = useStudents();
+  const [renderCount, setRenderCount] = useState(0);
+
+  const handleViewProfile = useCallback((id: number): void => {
     console.log(`View profile for student ${id}`);
+  }, []);
+
+  const sortedStudents = useMemo(() => {
+    if (state.status !== "success") return [];
+    const sorted = expensiveSort(state.students);
+    console.log("memoize called", sorted);
+    return sorted;
+  }, [state]);
+
+  if (state.status === "loading") {
+    return <p className="status-message">Loading students...</p>;
   }
 
-  function handleAddStudent(newStudent: Omit<Student, "id">): void {
-    const id = students.length ? Math.max(...students.map((s) => s.id)) + 1 : 1;
-    setStudents((prev) => [...prev, { id, ...newStudent }]);
+  if (state.status === "error") {
+    return (
+      <p className="status-message status-message--error">Could not load students: {state.error}</p>
+    );
   }
 
   return (
-    <div style={{ background: "#ddd " }}>
-      <AddStudentForm onAddStudent={handleAddStudent} />
+    <div>
+      <AddStudentForm onAddStudent={addStudent} />
+      <button
+        type="button"
+        className="btn btn--refresh"
+        onClick={() => setRenderCount((c) => c + 1)}
+      >
+        Force re-render, no data change ({renderCount})
+      </button>
       <div className="card-grid">
-        {students.map((student) => {
+        {sortedStudents.map((student) => {
           return (
             <StudentCard
               key={student.id}
               {...student}
-              avatar="url"
               onViewProfile={handleViewProfile}
+              onDelete={removeStudent}
             />
           );
         })}

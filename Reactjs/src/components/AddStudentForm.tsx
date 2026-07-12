@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, SubmitEvent } from "react";
 import type { Student } from "../types/types";
 
@@ -17,7 +17,12 @@ interface AddStudentFormProps {
 function AddStudentForm({ onAddStudent }: AddStudentFormProps) {
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
-  const [avatar, setavatarURl] = useState(AVATAR_OPTIONS[0]);
+  const [avatar, setAvatar] = useState(AVATAR_OPTIONS[0]);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    nameInputRef.current?.focus();
+  }, []);
 
   function handleNameChange(event: ChangeEvent<HTMLInputElement>): void {
     setName(event.target.value);
@@ -35,13 +40,21 @@ function AddStudentForm({ onAddStudent }: AddStudentFormProps) {
 
     setName("");
     setRole("");
-    setavatarURl(AVATAR_OPTIONS[0]);
+    setAvatar(AVATAR_OPTIONS[0]);
+    nameInputRef.current?.focus();
   }
 
   return (
     <form className="add-student-form" onSubmit={handleSubmit}>
       <div className="form-row">
-        <input type="text" placeholder="Name" value={name} onChange={handleNameChange} required />
+        <input
+          ref={nameInputRef}
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={handleNameChange}
+          required
+        />
         <input type="text" placeholder="Role" value={role} onChange={handleRoleChange} />
       </div>
 
@@ -54,7 +67,7 @@ function AddStudentForm({ onAddStudent }: AddStudentFormProps) {
               name="avatar"
               value={url}
               checked={avatar === url}
-              onChange={() => setavatarURl(url)}
+              onChange={() => setAvatar(url)}
             />
             <img src={url} alt="Avatar option" />
           </label>

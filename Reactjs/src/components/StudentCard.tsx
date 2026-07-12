@@ -1,10 +1,14 @@
+import { memo } from "react";
 import type { Student } from "../types/types";
 
 interface StudentCardProps extends Student {
   onViewProfile: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
-function StudentCard({ id, name, role, avatar, onViewProfile }: StudentCardProps) {
+function StudentCard({ id, name, role, avatar, onViewProfile, onDelete }: StudentCardProps) {
+  console.log("🚀 ~ StudentCard ~ Re-rendered:", name);
+
   return (
     <div className="card">
       <img src={avatar} alt="Student avatar" className="card__image" />
@@ -16,9 +20,12 @@ function StudentCard({ id, name, role, avatar, onViewProfile }: StudentCardProps
         <button type="button" className="btn" onClick={() => onViewProfile(id)}>
           View Profile
         </button>
+        <button type="button" className="btn btn--delete" onClick={() => onDelete(id)}>
+          Delete
+        </button>
       </div>
     </div>
   );
 }
 
-export default StudentCard;
+export default memo(StudentCard);

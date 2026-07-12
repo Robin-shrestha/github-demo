@@ -77,6 +77,47 @@ function CardGrid() {
 
 All the `useState`/`useEffect` logic moved out of `CardGrid` and into `useStudents` — `CardGrid` just consumes the result.
 
+## What is useCallback, and why use it?
+
+`useCallback` returns the *same* function reference across re-renders, as long as its dependency array hasn't changed — instead of creating a brand-new function every time the component re-renders (which is what happens by default; functions are recreated on every render in JS).
+
+On its own, that doesn't save any real work — creating a function is cheap. It starts to matter when that function is passed as a **prop to a child component wrapped in `React.memo`**. `memo` skips re-rendering a component if all its props are equal to last time, but for a function prop, "equal" means the *same reference* — a new function every render looks like a "changed" prop to `memo`, even if the function does the exact same thing, and defeats the optimization entirely.
+
+This project demonstrates it concretely: `StudentCard` is wrapped in `memo()`, and both callbacks passed to it — `handleViewProfile` (in `CardGrid.tsx`) and `addStudent`/`removeStudent` (returned from `useStudents.ts`) — are wrapped in `useCallback`. The effect: adding a 6th student causes only the *new* `StudentCard` to render. The other five don't re-render at all, because none of their props (including the callbacks) changed reference. Without `useCallback` on those functions, all six cards would re-render every time — the `memo` wrapper would still exist, but it would never actually skip anything, since the callback props would look "new" every render.
+
+```tsx
+// useStudents.ts
+const removeStudent = useCallback(async (id: number): Promise<void> => {
+  // ...delete logic...
+}, []); // same function every render — memo can actually compare it
+```
+
+```tsx
+// StudentCard.tsx
+export default memo(StudentCard); // skips re-render if props are unchanged
+```
+
+**Rule of thumb:** don't reach for `useCallback` by default — it only pays off when the function is a prop to a `memo`-wrapped component (or a dependency of another hook like `useEffect`). Adding it everywhere "just in case" adds noise without a real benefit.
+
+## What is useMemo, and why use it?
+
+`useMemo` caches the *return value* of a calculation across re-renders, recomputing it only when its dependency array changes. Every other render, it just hands back the value from last time instead of redoing the work.
+
+Like `useCallback`, it isn't free — it costs a comparison and a bit of memory — so it only pays off when the calculation is genuinely expensive, or when a cheap calculation is being re-run far more often than its input actually changes.
+
+This project demonstrates it concretely: `CardGrid.tsx` sorts the student list with `expensiveSort`, a function that deliberately blocks for about a second before returning (standing in for a real expensive computation, like sorting/filtering thousands of rows or a heavy formatting pass). It's wrapped in `useMemo` with `state` as its only dependency:
+
+```tsx
+const sortedStudents = useMemo(() => {
+  if (state.status !== "success") return [];
+  return expensiveSort(state.students);
+}, [state]);
+```
+
+`CardGrid` also has a "Force re-render, no data change" button that just bumps an unrelated `renderCount` state. Clicking it re-renders `CardGrid`, but `state` hasn't changed — so `useMemo` skips `expensiveSort` entirely and the click feels instant. Remove the `useMemo` (or call `expensiveSort` directly) and that same button would re-run the full second-long sort on every click, even though the data never moved.
+
+**Rule of thumb:** reach for `useMemo` when a calculation is measurably expensive (not just "feels like extra code"), and when the component re-renders for reasons unrelated to that calculation's inputs. Wrapping cheap calculations in `useMemo` "just in case" usually costs more than it saves.
+
 ## Rule 1: Only call hooks at the top level
 
 Don't call hooks inside loops, conditions, or nested functions.
