@@ -1,0 +1,11 @@
+{
+  "name": "teaching-prep",
+  "version": "1.0.0",
+  "description": "simple read  me",
+  "main": "index.js",
+  "scripts": {
+    "serve": "json-server --watch db.json --port 3000 --host 0.0.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

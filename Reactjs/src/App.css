@@ -151,3 +151,13 @@
   font-size: 13px;
   color: #777;
 }
+
+.status-message {
+  padding: 16px;
+  font-size: 14px;
+  color: #666;
+}
+
+.status-message--error {
+  color: #b3261e;
+}

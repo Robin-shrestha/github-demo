@@ -1,33 +1,36 @@
-import { useState } from "react";
+import { useCallback, useMemo } from "react";
 import StudentCard from "./StudentCard";
 import AddStudentForm from "./AddStudentForm";
-import type { Student } from "../types/types";
+import useStudents from "../hooks/useStudents";
 
 function CardGrid() {
-  const [students, setStudents] = useState<Student[]>([]);
+  const { state, addStudent } = useStudents();
 
-  function handleViewProfile(id: number): void {
+  const handleViewProfile = useCallback((id: number): void => {
     console.log(`View profile for student ${id}`);
+  }, []);
+
+  const sortedStudents = useMemo(() => {
+    if (state.status !== "success") return [];
+    return [...state.students].sort((a, b) => a.name.localeCompare(b.name));
+  }, [state]);
+
+  if (state.status === "loading") {
+    return <p className="status-message">Loading students...</p>;
   }
 
-  function handleAddStudent(newStudent: Omit<Student, "id">): void {
-    const id = students.length ? Math.max(...students.map((s) => s.id)) + 1 : 1;
-    setStudents((prev) => [...prev, { id, ...newStudent }]);
+  if (state.status === "error") {
+    return (
+      <p className="status-message status-message--error">Could not load students: {state.error}</p>
+    );
   }
 
   return (
-    <div style={{ background: "#ddd " }}>
-      <AddStudentForm onAddStudent={handleAddStudent} />
+    <div>
+      <AddStudentForm onAddStudent={addStudent} />
       <div className="card-grid">
-        {students.map((student) => {
-          return (
-            <StudentCard
-              key={student.id}
-              {...student}
-              avatar="url"
-              onViewProfile={handleViewProfile}
-            />
-          );
+        {sortedStudents.map((student) => {
+          return <StudentCard key={student.id} {...student} onViewProfile={handleViewProfile} />;
         })}
       </div>
     </div>
