@@ -17,7 +17,7 @@ interface AddStudentFormProps {
 function AddStudentForm({ onAddStudent }: AddStudentFormProps) {
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState(AVATAR_OPTIONS[0]);
+  const [avatar, setavatarURl] = useState(AVATAR_OPTIONS[0]);
 
   function handleNameChange(event: ChangeEvent<HTMLInputElement>): void {
     setName(event.target.value);
@@ -31,11 +31,11 @@ function AddStudentForm({ onAddStudent }: AddStudentFormProps) {
     event.preventDefault();
     if (!name.trim()) return;
 
-    onAddStudent({ name, role: role || "Unassigned", avatarUrl });
+    onAddStudent({ name, role: role || "Unassigned", avatar: avatar });
 
     setName("");
     setRole("");
-    setAvatarUrl(AVATAR_OPTIONS[0]);
+    setavatarURl(AVATAR_OPTIONS[0]);
   }
 
   return (
@@ -53,8 +53,8 @@ function AddStudentForm({ onAddStudent }: AddStudentFormProps) {
               type="radio"
               name="avatar"
               value={url}
-              checked={avatarUrl === url}
-              onChange={() => setAvatarUrl(url)}
+              checked={avatar === url}
+              onChange={() => setavatarURl(url)}
             />
             <img src={url} alt="Avatar option" />
           </label>

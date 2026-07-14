@@ -4,10 +4,10 @@ interface StudentCardProps extends Student {
   onViewProfile: (id: number) => void;
 }
 
-function StudentCard({ id, name, role, avatarUrl, onViewProfile }: StudentCardProps) {
+function StudentCard({ id, name, role, avatar, onViewProfile }: StudentCardProps) {
   return (
     <div className="card">
-      <img src={avatarUrl} alt="Student avatar" className="card__image" />
+      <img src={avatar} alt="Student avatar" className="card__image" />
       <div className="card__body">
         <h3 className="card__name">{name}</h3>
         <p className="card__role">{role}</p>
