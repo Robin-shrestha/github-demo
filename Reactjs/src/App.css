@@ -174,3 +174,29 @@
 .status-message--error {
   color: #b3261e;
 }
+
+.app-nav {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.nav-link {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 14px;
+  color: #2e5c8a;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-link--active {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.card--profile {
+  width: 240px;
+  margin: 0 auto;
+}

@@ -1,14 +1,12 @@
 import { memo } from "react";
+import { Link } from "react-router-dom";
 import type { Student } from "../types/types";
 
 interface StudentCardProps extends Student {
-  onViewProfile: (id: number) => void;
   onDelete: (id: number) => void;
 }
 
-function StudentCard({ id, name, role, avatar, onViewProfile, onDelete }: StudentCardProps) {
-  console.log("🚀 ~ StudentCard ~ Re-rendered:", name);
-
+function StudentCard({ id, name, role, avatar, onDelete }: StudentCardProps) {
   return (
     <div className="card">
       <img src={avatar} alt="Student avatar" className="card__image" />
@@ -17,9 +15,9 @@ function StudentCard({ id, name, role, avatar, onViewProfile, onDelete }: Studen
         <p className="card__role">{role}</p>
       </div>
       <div className="card__footer">
-        <button type="button" className="btn" onClick={() => onViewProfile(id)}>
+        <Link to={`/students/${id}`} className="btn">
           View Profile
-        </button>
+        </Link>
         <button type="button" className="btn btn--delete" onClick={() => onDelete(id)}>
           Delete
         </button>

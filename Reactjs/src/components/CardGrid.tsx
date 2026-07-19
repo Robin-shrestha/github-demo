@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import StudentCard from "./StudentCard";
-import AddStudentForm from "./AddStudentForm";
 import useStudents from "../hooks/useStudents";
 import type { Student } from "../types/types";
 
@@ -15,12 +15,8 @@ function expensiveSort(students: Student[]): Student[] {
 }
 
 function CardGrid() {
-  const { state, addStudent, removeStudent } = useStudents();
+  const { state, removeStudent } = useStudents();
   const [renderCount, setRenderCount] = useState(0);
-
-  const handleViewProfile = useCallback((id: number): void => {
-    console.log(`View profile for student ${id}`);
-  }, []);
 
   const sortedStudents = useMemo(() => {
     if (state.status !== "success") return [];
@@ -41,7 +37,15 @@ function CardGrid() {
 
   return (
     <div>
-      <AddStudentForm onAddStudent={addStudent} />
+      <Link to="/students/new" className="btn btn--submit">
+        Add Student
+      </Link>
+      <div className="card-grid">
+        {sortedStudents.map((student) => {
+          return <StudentCard key={student.id} {...student} onDelete={removeStudent} />;
+        })}
+      </div>
+
       <button
         type="button"
         className="btn btn--refresh"
@@ -49,18 +53,6 @@ function CardGrid() {
       >
         Force re-render, no data change ({renderCount})
       </button>
-      <div className="card-grid">
-        {sortedStudents.map((student) => {
-          return (
-            <StudentCard
-              key={student.id}
-              {...student}
-              onViewProfile={handleViewProfile}
-              onDelete={removeStudent}
-            />
-          );
-        })}
-      </div>
     </div>
   );
 }
