@@ -1,4 +1,19 @@
+import { useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Alert,
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  CircularProgress,
+  Divider,
+  Popover,
+  Stack,
+  Typography,
+} from "@mui/material";
 import useStudent from "../hooks/useStudent";
 
 function StudentProfilePage() {
@@ -6,38 +21,94 @@ function StudentProfilePage() {
   const navigate = useNavigate();
   const state = useStudent(id);
 
+  const avatarRef = useRef<HTMLDivElement>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
   if (state.status === "loading") {
-    return <p className="status-message">Loading student...</p>;
+    return (
+      <Box sx={{ display: "flex", alignItems: "center", gap: 2, padding: 2 }}>
+        <CircularProgress size={20} />
+        <Typography>Loading student...</Typography>
+      </Box>
+    );
   }
 
   if (state.status === "not-found") {
     return (
-      <div className="status-message">
-        <p>No student found with id "{id}".</p>
-        <Link to="/">Back to all students</Link>
-      </div>
+      <Alert
+        severity="warning"
+        action={
+          <Button component={Link} to="/" size="small">
+            Back
+          </Button>
+        }
+      >
+        No student found with id "{id}".
+      </Alert>
     );
   }
 
   if (state.status === "error") {
-    return (
-      <p className="status-message status-message--error">Could not load student: {state.error}</p>
-    );
+    return <Alert severity="error">Could not load student: {state.error}</Alert>;
   }
 
   const { student } = state;
 
   return (
-    <div className="card card--profile">
-      <img src={student.avatar} alt="Student avatar" className="card__image" />
-      <div className="card__body">
-        <h2 className="card__name">{student.name}</h2>
-        <p className="card__role">{student.role}</p>
-      </div>
-      <button type="button" className="btn" onClick={() => navigate(-1)}>
-        Back
-      </button>
-    </div>
+    <Card sx={{ maxWidth: 360, margin: "0 auto" }}>
+      <CardContent>
+        <Stack sx={{ alignItems: "center" }} spacing={1}>
+          <Avatar
+            ref={avatarRef}
+            src={student.avatar}
+            alt="Student avatar"
+            onClick={() => setIsPreviewOpen(true)}
+            sx={{ width: 88, height: 88, cursor: "pointer" }}
+          />
+          <Popover
+            open={isPreviewOpen}
+            anchorEl={avatarRef.current}
+            onClose={() => setIsPreviewOpen(false)}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            transformOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <Box
+              component="img"
+              src={student.avatar}
+              alt="Student avatar, full size"
+              sx={{ width: 280, height: 280, objectFit: "cover", display: "block" }}
+            />
+          </Popover>
+          <Typography variant="h5">{student.name}</Typography>
+
+          <Stack direction="row" spacing={1}>
+            <Chip label={student.role} color="primary" size="small" />
+            {typeof student.experienceYears === "number" && (
+              <Chip label={`${student.experienceYears} yrs experience`} size="small" />
+            )}
+          </Stack>
+
+          {student.email && (
+            <Typography variant="body2" color="text.secondary">
+              {student.email}
+            </Typography>
+          )}
+        </Stack>
+
+        {student.bio && (
+          <>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="body2">{student.bio}</Typography>
+          </>
+        )}
+
+        <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
+          <Button variant="outlined" onClick={() => navigate(-1)}>
+            Back
+          </Button>
+        </Box>
+      </CardContent>
+    </Card>
   );
 }
 

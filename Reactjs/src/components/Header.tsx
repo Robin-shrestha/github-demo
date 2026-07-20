@@ -1,8 +1,10 @@
+import { Typography } from "@mui/material";
+
 function Header() {
   return (
-    <header className="app-header">
-      <h1>Course Students</h1>
-    </header>
+    <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
+      Course Students
+    </Typography>
   );
 }
 

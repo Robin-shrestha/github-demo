@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 interface LoginPageProps {
   onLogin: () => void;
@@ -15,9 +16,9 @@ function LoginPage({ onLogin }: LoginPageProps) {
   return (
     <div className="status-message">
       <p>Mock login.</p>
-      <button type="button" className="btn" onClick={handleLogin}>
+      <Button variant="contained" onClick={handleLogin}>
         Log in
-      </button>
+      </Button>
     </div>
   );
 }

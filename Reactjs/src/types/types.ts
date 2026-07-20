@@ -3,4 +3,7 @@ export interface Student {
   name: string;
   role: string;
   avatar: string;
+  email?: string;
+  bio?: string;
+  experienceYears?: number;
 }

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { Alert, Box, Button, CircularProgress, Typography } from "@mui/material";
 import StudentCard from "./StudentCard";
 import useStudents from "../hooks/useStudents";
 import type { Student } from "../types/types";
@@ -26,34 +27,34 @@ function CardGrid() {
   }, [state]);
 
   if (state.status === "loading") {
-    return <p className="status-message">Loading students...</p>;
-  }
-
-  if (state.status === "error") {
     return (
-      <p className="status-message status-message--error">Could not load students: {state.error}</p>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 2, padding: 2 }}>
+        <CircularProgress size={20} />
+        <Typography>Loading students...</Typography>
+      </Box>
     );
   }
 
+  if (state.status === "error") {
+    return <Alert severity="error">Could not load students: {state.error}</Alert>;
+  }
+
   return (
-    <div>
-      <Link to="/students/new" className="btn btn--submit">
+    <Box>
+      <Button component={Link} to="/students/new" variant="contained" sx={{ mb: 3 }}>
         Add Student
-      </Link>
-      <div className="card-grid">
+      </Button>
+
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, mb: 3 }}>
         {sortedStudents.map((student) => {
           return <StudentCard key={student.id} {...student} onDelete={removeStudent} />;
         })}
-      </div>
+      </Box>
 
-      <button
-        type="button"
-        className="btn btn--refresh"
-        onClick={() => setRenderCount((c) => c + 1)}
-      >
+      <Button variant="outlined" onClick={() => setRenderCount((c) => c + 1)}>
         Force re-render, no data change ({renderCount})
-      </button>
-    </div>
+      </Button>
+    </Box>
   );
 }
 

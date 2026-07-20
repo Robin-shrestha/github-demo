@@ -1,5 +1,6 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
+import { Button, Card, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
 import type { Student } from "../types/types";
 
 interface StudentCardProps extends Student {
@@ -8,21 +9,25 @@ interface StudentCardProps extends Student {
 
 function StudentCard({ id, name, role, avatar, onDelete }: StudentCardProps) {
   return (
-    <div className="card">
-      <img src={avatar} alt="Student avatar" className="card__image" />
-      <div className="card__body">
-        <h3 className="card__name">{name}</h3>
-        <p className="card__role">{role}</p>
-      </div>
-      <div className="card__footer">
-        <Link to={`/students/${id}`} className="btn">
+    <Card sx={{ width: 220 }}>
+      <CardMedia component="img" image={avatar} alt="Student avatar" sx={{ height: 160 }} />
+      <CardContent>
+        <Typography variant="h6" component="h3" noWrap>
+          {name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {role}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button component={Link} to={`/students/${id}`} size="small" variant="outlined">
           View Profile
-        </Link>
-        <button type="button" className="btn btn--delete" onClick={() => onDelete(id)}>
+        </Button>
+        <Button size="small" variant="outlined" color="error" onClick={() => onDelete(id)}>
           Delete
-        </button>
-      </div>
-    </div>
+        </Button>
+      </CardActions>
+    </Card>
   );
 }
 

@@ -7,10 +7,21 @@ interface RawStudent {
   name: string;
   role: string;
   avatar: string;
+  email?: string;
+  bio?: string;
+  experienceYears?: number;
 }
 
 function toStudent(raw: RawStudent): Student {
-  return { id: raw.id, name: raw.name, role: raw.role, avatar: raw.avatar };
+  return {
+    id: raw.id,
+    name: raw.name,
+    role: raw.role,
+    avatar: raw.avatar,
+    email: raw.email,
+    bio: raw.bio,
+    experienceYears: raw.experienceYears,
+  };
 }
 
 // All fetch calls to /students live here. These are plain functions, not
@@ -46,6 +57,9 @@ export async function addStudent(newStudent: Omit<Student, "id">): Promise<Stude
       name: newStudent.name,
       role: newStudent.role,
       avatar: newStudent.avatar,
+      email: newStudent.email,
+      bio: newStudent.bio,
+      experienceYears: newStudent.experienceYears,
       id: uuid(),
     }),
   });
