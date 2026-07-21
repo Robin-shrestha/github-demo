@@ -6,6 +6,9 @@ import AddStudentPage from "./routes/AddStudentPage";
 import LoginPage from "./routes/LoginPage";
 import NotFoundPage from "./routes/NotFoundPage";
 import CardGrid from "./components/CardGrid";
+import FormsDemoLayout from "./routes/forms-demo/FormsDemoLayout";
+import ControlledVsUncontrolled from "./routes/forms-demo/ControlledVsUncontrolled";
+import FormStateDemo from "./routes/forms-demo/FormStateDemo";
 import useMockAuth from "./hooks/useMockAuth";
 import "./App.css";
 
@@ -21,6 +24,10 @@ function App() {
           <Route path="students/:id" element={<StudentProfilePage />} />
           <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
             <Route path="students/new" element={<AddStudentPage />} />
+          </Route>
+          <Route path="forms-demo" element={<FormsDemoLayout />}>
+            <Route index element={<ControlledVsUncontrolled />} />
+            <Route path="form-state" element={<FormStateDemo />} />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Route>

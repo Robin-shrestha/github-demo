@@ -19,6 +19,9 @@ function Layout({ isAuthenticated, onLogout }: LayoutProps) {
         <NavLink to="/" end className={navLinkClass}>
           Students
         </NavLink>
+        <NavLink to="/forms-demo" className={navLinkClass}>
+          Forms Demo
+        </NavLink>
         {isAuthenticated ? (
           <button type="button" className="nav-link" onClick={onLogout}>
             Log out
