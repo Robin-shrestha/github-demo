@@ -102,6 +102,20 @@ function StudentProfilePage() {
           </>
         )}
 
+        {student.hobbies && student.hobbies.length > 0 && (
+          <>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="subtitle2" gutterBottom>
+              Hobbies
+            </Typography>
+            <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", gap: 1 }}>
+              {student.hobbies.map((hobby) => (
+                <Chip key={hobby} label={hobby} size="small" variant="outlined" />
+              ))}
+            </Stack>
+          </>
+        )}
+
         <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
           <Button variant="outlined" onClick={() => navigate(-1)}>
             Back

@@ -7,12 +7,8 @@ function AddStudentPage() {
   const navigate = useNavigate();
 
   async function handleAddStudent(newStudent: Omit<Student, "id">): Promise<void> {
-    try {
-      const created = await addStudent(newStudent);
-      navigate(`/students/${created.id}`);
-    } catch (err: unknown) {
-      console.error("Failed to add student", err);
-    }
+    const created = await addStudent(newStudent);
+    navigate(`/students/${created.id}`);
   }
 
   return <AddStudentForm onAddStudent={handleAddStudent} />;

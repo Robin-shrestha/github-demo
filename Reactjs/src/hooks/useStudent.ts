@@ -8,8 +8,6 @@ export type StudentState =
   | { status: "error"; error: string }
   | { status: "success"; student: Student };
 
-// Fetches a single student via GET /students/:id, instead of fetching
-// the whole list and filtering client-side.
 function useStudent(id: string | undefined): StudentState {
   const [state, setState] = useState<StudentState>({ status: "loading" });
 

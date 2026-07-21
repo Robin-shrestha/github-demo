@@ -9,7 +9,7 @@ type StudentsState =
 
 export interface UseStudentsResult {
   state: StudentsState;
-  removeStudent: (id: number) => Promise<void>;
+  removeStudent: (id: number | string) => Promise<void>;
 }
 
 function useStudents(): UseStudentsResult {
@@ -35,7 +35,7 @@ function useStudents(): UseStudentsResult {
     };
   }, []);
 
-  const removeStudent = useCallback(async (id: number): Promise<void> => {
+  const removeStudent = useCallback(async (id: number | string): Promise<void> => {
     try {
       await deleteStudent(id);
       setState((prev) => {
