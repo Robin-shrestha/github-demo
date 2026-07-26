@@ -13,6 +13,9 @@ import LoginPage from "./routes/LoginPage";
 import NotFoundPage from "./routes/NotFoundPage";
 import RouteError from "./routes/RouteError";
 import CardGrid from "./components/CardGrid";
+import RtkQueryDemoLayout from "./routes/rtk-query-demo/RtkQueryDemoLayout";
+import AutoFetchDemo from "./routes/rtk-query-demo/AutoFetchDemo";
+import MutationsDemo from "./routes/rtk-query-demo/MutationsDemo";
 import "./App.css";
 
 const ContextDemoLayout = lazy(() => import("./routes/context-demo/ContextDemoLayout"));
@@ -43,6 +46,10 @@ const router = createBrowserRouter(
         <Route path="redux-demo" element={<ReduxDemoLayout />}>
           <Route index element={<SelectorsDemo />} />
           <Route path="store-flow" element={<StoreFlowDemo />} />
+        </Route>
+        <Route path="rtk-query-demo" element={<RtkQueryDemoLayout />}>
+          <Route index element={<AutoFetchDemo />} />
+          <Route path="mutations" element={<MutationsDemo />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Route>

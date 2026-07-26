@@ -1,3 +1,4 @@
+/** @deprecated Unused. Replaced by RTK Query (useGetStudentByIdQuery). */
 import { useEffect, useState } from "react";
 import type { Student } from "../types/types";
 import { getStudentById } from "../api/students";

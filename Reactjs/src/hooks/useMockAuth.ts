@@ -1,3 +1,4 @@
+/** @deprecated Unused. Auth now lives in the Redux authSlice. */
 import { useCallback, useState } from "react";
 
 const AUTH_STORAGE_KEY = "mock-auth";

@@ -1,3 +1,4 @@
+/** @deprecated Unused. Student fetching moved to RTK Query (studentsApi + studentRequests). */
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
 import type { Student } from "../types/types";

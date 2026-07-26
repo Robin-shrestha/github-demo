@@ -59,6 +59,9 @@ function Layout() {
         <NavLink to="/redux-demo" className={navLinkClass}>
           Redux Demo
         </NavLink>
+        <NavLink to="/rtk-query-demo" className={navLinkClass}>
+          RTK Query
+        </NavLink>
         {isAuthenticated ? (
           <button type="button" className="nav-link" onClick={() => dispatch(logout())}>
             Log out

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Alert, Box, Button, CircularProgress, Typography } from "@mui/material";
 import StudentCard from "./StudentCard";
-import useStudents from "../hooks/useStudents";
+import { useGetStudentsQuery, useDeleteStudentMutation } from "../store/studentsApi";
 import type { Student } from "../types/types";
 
 // Simulated expensive computation — busy-waits ~400ms so the useMemo demo
@@ -16,17 +16,19 @@ function expensiveSort(students: Student[]): Student[] {
 }
 
 function CardGrid() {
-  const { state, removeStudent } = useStudents();
+  const { data, isLoading, isError, isFetching } = useGetStudentsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+  console.log("🚀 ~ CardGrid ~ isLoading:", isLoading, isFetching);
+  const [deleteStudent] = useDeleteStudentMutation();
   const [renderCount, setRenderCount] = useState(0);
 
   const sortedStudents = useMemo(() => {
-    if (state.status !== "success") return [];
-    const sorted = expensiveSort(state.students);
-    console.log("memoize called", sorted);
-    return sorted;
-  }, [state]);
+    if (!data) return [];
+    return expensiveSort(data);
+  }, [data]);
 
-  if (state.status === "loading") {
+  if (isLoading) {
     return (
       <Box sx={{ display: "flex", alignItems: "center", gap: 2, padding: 2 }}>
         <CircularProgress size={20} />
@@ -35,8 +37,8 @@ function CardGrid() {
     );
   }
 
-  if (state.status === "error") {
-    return <Alert severity="error">Could not load students: {state.error}</Alert>;
+  if (isError) {
+    return <Alert severity="error">Could not load students.</Alert>;
   }
 
   return (
@@ -47,7 +49,7 @@ function CardGrid() {
 
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, mb: 3 }}>
         {sortedStudents.map((student) => {
-          return <StudentCard key={student.id} {...student} onDelete={removeStudent} />;
+          return <StudentCard key={student.id} {...student} onDelete={deleteStudent} />;
         })}
       </Box>
 

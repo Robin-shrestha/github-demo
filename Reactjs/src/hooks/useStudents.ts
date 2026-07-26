@@ -1,3 +1,4 @@
+/** @deprecated Unused. Replaced by RTK Query (useGetStudentsQuery / useDeleteStudentMutation). */
 import { useCallback, useEffect, useState } from "react";
 import type { Student } from "../types/types";
 import { getStudents, deleteStudent } from "../api/students";

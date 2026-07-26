@@ -14,17 +14,18 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import useStudent from "../hooks/useStudent";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { useGetStudentByIdQuery } from "../store/studentsApi";
 
 function StudentProfilePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const state = useStudent(id);
+  const { data: student, isLoading, isError, error } = useGetStudentByIdQuery(id ?? skipToken);
 
   const avatarRef = useRef<HTMLDivElement>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-  if (state.status === "loading") {
+  if (isLoading) {
     return (
       <Box sx={{ display: "flex", alignItems: "center", gap: 2, padding: 2 }}>
         <CircularProgress size={20} />
@@ -33,7 +34,8 @@ function StudentProfilePage() {
     );
   }
 
-  if (state.status === "not-found") {
+  const notFound = !id || (isError && (error as { status?: number }).status === 404);
+  if (notFound) {
     return (
       <Alert
         severity="warning"
@@ -48,11 +50,9 @@ function StudentProfilePage() {
     );
   }
 
-  if (state.status === "error") {
-    return <Alert severity="error">Could not load student: {state.error}</Alert>;
+  if (isError || !student) {
+    return <Alert severity="error">Could not load student.</Alert>;
   }
-
-  const { student } = state;
 
   return (
     <Card sx={{ maxWidth: 360, margin: "0 auto" }}>
