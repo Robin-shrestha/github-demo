@@ -6,6 +6,10 @@ import AddStudentPage from "./routes/AddStudentPage";
 import LoginPage from "./routes/LoginPage";
 import NotFoundPage from "./routes/NotFoundPage";
 import CardGrid from "./components/CardGrid";
+import ContextDemoLayout from "./routes/context-demo/ContextDemoLayout";
+import ConsumersAndRerenders from "./routes/context-demo/ConsumersAndRerenders";
+import UnusedStateRerender from "./routes/context-demo/UnusedStateRerender";
+import ValueIdentityDemo from "./routes/context-demo/ValueIdentityDemo";
 import useMockAuth from "./hooks/useMockAuth";
 import "./App.css";
 
@@ -21,6 +25,11 @@ function App() {
           <Route path="students/:id" element={<StudentProfilePage />} />
           <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
             <Route path="students/new" element={<AddStudentPage />} />
+          </Route>
+          <Route path="context-demo" element={<ContextDemoLayout />}>
+            <Route index element={<ConsumersAndRerenders />} />
+            <Route path="unused-state" element={<UnusedStateRerender />} />
+            <Route path="value-identity" element={<ValueIdentityDemo />} />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Route>
