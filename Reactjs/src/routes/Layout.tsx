@@ -1,6 +1,10 @@
 import { NavLink, Outlet } from "react-router-dom";
+import { IconButton, Tooltip } from "@mui/material";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { useColorMode } from "../theme/ColorModeContext";
 
 interface LayoutProps {
   isAuthenticated: boolean;
@@ -12,6 +16,8 @@ function navLinkClass({ isActive }: { isActive: boolean }): string {
 }
 
 function Layout({ isAuthenticated, onLogout }: LayoutProps) {
+  const { mode, toggle } = useColorMode();
+
   return (
     <div className="app">
       <Header />
@@ -28,6 +34,11 @@ function Layout({ isAuthenticated, onLogout }: LayoutProps) {
             Log in
           </NavLink>
         )}
+        <Tooltip title={mode === "light" ? "Switch to dark" : "Switch to light"}>
+          <IconButton size="small" onClick={toggle} aria-label="Toggle color mode">
+            {mode === "light" ? <Brightness4Icon /> : <Brightness7Icon />}
+          </IconButton>
+        </Tooltip>
       </nav>
       <Outlet />
       <Footer />
