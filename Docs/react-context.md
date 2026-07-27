@@ -1,12 +1,6 @@
 # React Context & useContext
 
-Notes on what Context is, how it relates to the outlet context you've already used, and how to decide between Context and a store like Redux. Context is built into React — no library needed.
-
-## You've already used Context
-
-Back in the router playground, a layout did `<Outlet context={someValue} />` and a child route read it with `useOutletContext()` — the child got the value without anyone passing it down as a prop. That's React Context, just wrapped by React Router. React Router creates a context, puts your value in it, and `useOutletContext` is a thin `useContext` call under the hood. So this isn't a brand-new idea — it's the general version of something you've already seen work.
-
-## What Context is (and isn't)
+## What is Context
 
 Context lets a component provide a value to everything below it in the tree, so any descendant — no matter how deep — can read that value directly instead of receiving it through a chain of props. It's the built-in answer to prop-drilling.
 
