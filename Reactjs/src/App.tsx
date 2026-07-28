@@ -1,3 +1,4 @@
+import { lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./routes/Layout";
 import ProtectedRoute from "./routes/ProtectedRoute";
@@ -6,14 +7,15 @@ import AddStudentPage from "./routes/AddStudentPage";
 import LoginPage from "./routes/LoginPage";
 import NotFoundPage from "./routes/NotFoundPage";
 import CardGrid from "./components/CardGrid";
-import ContextDemoLayout from "./routes/context-demo/ContextDemoLayout";
-import ConsumersAndRerenders from "./routes/context-demo/ConsumersAndRerenders";
-import UnusedStateRerender from "./routes/context-demo/UnusedStateRerender";
-import ValueIdentityDemo from "./routes/context-demo/ValueIdentityDemo";
-import ReduxDemoLayout from "./routes/redux-demo/ReduxDemoLayout";
-import SelectorsDemo from "./routes/redux-demo/SelectorsDemo";
-import StoreFlowDemo from "./routes/redux-demo/StoreFlowDemo";
 import "./App.css";
+
+const ContextDemoLayout = lazy(() => import("./routes/context-demo/ContextDemoLayout"));
+const ConsumersAndRerenders = lazy(() => import("./routes/context-demo/ConsumersAndRerenders"));
+const UnusedStateRerender = lazy(() => import("./routes/context-demo/UnusedStateRerender"));
+const ValueIdentityDemo = lazy(() => import("./routes/context-demo/ValueIdentityDemo"));
+const ReduxDemoLayout = lazy(() => import("./routes/redux-demo/ReduxDemoLayout"));
+const SelectorsDemo = lazy(() => import("./routes/redux-demo/SelectorsDemo"));
+const StoreFlowDemo = lazy(() => import("./routes/redux-demo/StoreFlowDemo"));
 
 function App() {
   return (

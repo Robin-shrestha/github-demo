@@ -1,5 +1,15 @@
+import { Suspense } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { Avatar, Box, IconButton, Stack, Tooltip, Typography, Badge } from "@mui/material";
+import {
+  Avatar,
+  Badge,
+  Box,
+  CircularProgress,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Header from "../components/Header";
@@ -64,7 +74,15 @@ function Layout() {
           </IconButton>
         </Tooltip>
       </nav>
-      <Outlet />
+      <Suspense
+        fallback={
+          <Box sx={{ display: "flex", justifyContent: "center", p: 3, background: "#eee" }}>
+            <CircularProgress />
+          </Box>
+        }
+      >
+        <Outlet />
+      </Suspense>
       <Footer />
     </div>
   );
