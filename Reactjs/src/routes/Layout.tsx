@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { Avatar, Box, IconButton, Stack, Tooltip, Typography } from "@mui/material";
+import { Avatar, Box, IconButton, Stack, Tooltip, Typography, Badge } from "@mui/material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Header from "../components/Header";
@@ -20,6 +20,11 @@ function Layout() {
 
   return (
     <div className="app">
+      <Badge
+        badgeContent={import.meta.env.MODE.toUpperCase()}
+        color="info"
+        style={{ position: "absolute", top: 25, right: 75 }}
+      ></Badge>
       {user && (
         <Stack direction="row" spacing={1} sx={{ alignItems: "center", mb: 1.5 }}>
           <Avatar src={user.avatarUrl} alt={user.name} sx={{ width: 32, height: 32 }} />

@@ -6,6 +6,7 @@
   border-radius: 8px;
   font-family: system-ui, sans-serif;
   text-align: left;
+  position: relative;
 }
 
 .add-student-form {
