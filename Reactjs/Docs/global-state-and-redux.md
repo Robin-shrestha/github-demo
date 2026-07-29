@@ -4,7 +4,7 @@
 
 Most state belongs where it's used: a form's fields live in the form, a toggle's on/off lives in the component with the switch. React's own `useState` is perfect for that.
 
-The trouble starts when a lot of components, spread across the tree, need the same piece of state. The usual first move is to lift that state up to a common parent and pass it down as props. That works until the parent and the components that actually need the value are several layers apart — and now every component in between has to accept the prop and hand it along, even though it never uses it itself.
+When a lot of components, spread across the tree, need the same piece of state. The usual first move is to lift that state up to a common parent and pass it down as props. That works until the parent and the components that actually need the value are several layers apart — and now every component in between has to accept the prop and hand it along, even though it never uses it itself.
 
 ## What global state is
 

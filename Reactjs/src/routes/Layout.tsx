@@ -53,6 +53,9 @@ function Layout() {
         <NavLink to="/" end className={navLinkClass}>
           Students
         </NavLink>
+        <NavLink to="/docs" className={navLinkClass}>
+          Docs
+        </NavLink>
         <NavLink to="/context-demo" className={navLinkClass}>
           Context Demo
         </NavLink>

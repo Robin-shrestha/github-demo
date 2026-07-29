@@ -12,6 +12,8 @@ import AddStudentPage from "./routes/AddStudentPage";
 import LoginPage from "./routes/LoginPage";
 import NotFoundPage from "./routes/NotFoundPage";
 import RouteError from "./routes/RouteError";
+import DocsListPage from "./routes/DocsListPage";
+import DocPage from "./routes/DocPage";
 import CardGrid from "./components/CardGrid";
 import "./App.css";
 
@@ -29,6 +31,8 @@ const router = createBrowserRouter(
       <Route errorElement={<RouteError />}>
         <Route index element={<CardGrid />} />
         <Route path="login" element={<LoginPage />} />
+        <Route path="docs" element={<DocsListPage />} />
+        <Route path="docs/:slug" element={<DocPage />} />
         <Route path="students/:id" element={<StudentProfilePage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="students/new" element={<AddStudentPage />} />
