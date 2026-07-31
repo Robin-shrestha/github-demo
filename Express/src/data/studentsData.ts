@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import type { NewStudent, Student } from "./types.ts";
+import type { NewStudent, Student } from "../types/studentTypes.ts";
 
 let students: Student[] = [
   { id: 1, name: "Aarav Sharma", role: "Frontend", avatar: "https://i.pravatar.cc/150?img=1" },
