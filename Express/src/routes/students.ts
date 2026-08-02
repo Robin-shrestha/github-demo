@@ -6,22 +6,17 @@ import {
   listStudents,
   updateStudent,
 } from "../data/studentsData.ts";
+import { validateStudent } from "../middleware/validateStudent.ts";
+import { NotFound } from "../types/httpError.ts";
 import type { NewStudent } from "../types/studentTypes.ts";
 
 const router = Router();
+// const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-function validateStudent(body: unknown): NewStudent | null {
-  if (typeof body !== "object" || body === null) return null;
-  const { name, role, avatar } = body as Record<string, unknown>;
-  if (typeof name !== "string" || name.trim() === "") return null;
-  if (typeof role !== "string" || role.trim() === "") return null;
-  if (typeof avatar !== "string" || avatar.trim() === "") return null;
-  return { name, role, avatar };
-}
-
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   const { role } = req.query;
   const students = listStudents();
+  // await Promise.reject(new NotFound("Simulated error for testing error handling"));
 
   if (typeof role === "string") {
     res.json(students.filter((student) => student.role === role));
@@ -35,37 +30,21 @@ router.get("/:id", (req, res) => {
   const student = findStudent(req.params.id);
 
   if (!student) {
-    res.status(404).json({ error: `No student with id ${req.params.id}` });
-    return;
+    throw new NotFound(`No student with id ${req.params.id}`);
   }
 
   res.json(student);
 });
 
-router.post("/", (req, res) => {
-  const input = validateStudent(req.body);
-
-  if (!input) {
-    res.status(400).json({ error: "name, role and avatar are required" });
-    return;
-  }
-
-  res.status(201).json(addStudent(input));
+router.post("/", validateStudent, (req, res) => {
+  res.status(201).json(addStudent(req.body as NewStudent));
 });
 
-router.put("/:id", (req, res) => {
-  const input = validateStudent(req.body);
-
-  if (!input) {
-    res.status(400).json({ error: "name, role and avatar are required" });
-    return;
-  }
-
-  const updated = updateStudent(req.params.id, input);
+router.put("/:id", validateStudent, (req, res) => {
+  const updated = updateStudent(req.params.id, req.body as NewStudent);
 
   if (!updated) {
-    res.status(404).json({ error: `No student with id ${req.params.id}` });
-    return;
+    throw new NotFound(`No student with id ${req.params.id}`);
   }
 
   res.json(updated);
@@ -73,8 +52,7 @@ router.put("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   if (!deleteStudent(req.params.id)) {
-    res.status(404).json({ error: `No student with id ${req.params.id}` });
-    return;
+    throw new NotFound(`No student with id ${req.params.id}`);
   }
 
   res.status(204).end();
