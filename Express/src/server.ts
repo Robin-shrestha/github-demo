@@ -1,11 +1,12 @@
 import express from "express";
+import { envConstants } from "./constants/env.ts";
 import { requestLogger } from "./middleware/requestLogger.ts";
 import { notFound } from "./middleware/notFound.ts";
 import { errorHandler } from "./middleware/errorHandler.ts";
 import studentsRouter from "./routes/students.ts";
 
 const app = express();
-const PORT = 3001;
+const { PORT } = envConstants;
 
 app.use(requestLogger);
 app.use(express.json());

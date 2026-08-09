@@ -7,7 +7,7 @@ import {
   listStudents,
   updateStudent,
 } from "./data/studentsData.ts";
-import type { NewStudent } from "./types/studentTypes.ts";
+import type { Student } from "./types/studentTypes.ts";
 
 const PORT = 3001;
 
@@ -39,7 +39,7 @@ function readJsonBody(req: IncomingMessage): Promise<unknown> {
   });
 }
 
-function validateStudent(body: unknown): NewStudent | null {
+function validateStudent(body: unknown): Student | null {
   if (typeof body !== "object" || body === null) return null;
   const { name, role, avatar } = body as Record<string, unknown>;
   if (typeof name !== "string" || name.trim() === "") return null;

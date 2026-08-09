@@ -1,7 +1,9 @@
 import { randomUUID } from "node:crypto";
-import type { NewStudent, Student } from "../types/studentTypes.ts";
+import type { Student } from "../types/studentTypes.ts";
 
-let students: Student[] = [
+type StoredStudent = Student & { id: number | string };
+
+let students: StoredStudent[] = [
   { id: 1, name: "Aarav Sharma", role: "Frontend", avatar: "https://i.pravatar.cc/150?img=1" },
   { id: 2, name: "Priya Thapa", role: "Backend", avatar: "https://i.pravatar.cc/150?img=5" },
   { id: 3, name: "Bikash Rai", role: "Fullstack", avatar: "https://i.pravatar.cc/150?img=12" },
@@ -9,21 +11,21 @@ let students: Student[] = [
   { id: 5, name: "Rohan KC", role: "Backend", avatar: "https://i.pravatar.cc/150?img=32" },
 ];
 
-export function listStudents(): Student[] {
+export function listStudents(): StoredStudent[] {
   return students;
 }
 
-export function findStudent(id: string): Student | undefined {
+export function findStudent(id: string): StoredStudent | undefined {
   return students.find((student) => String(student.id) === id);
 }
 
-export function addStudent(input: NewStudent): Student {
-  const student: Student = { id: randomUUID(), ...input };
+export function addStudent(input: Student): StoredStudent {
+  const student: StoredStudent = { id: randomUUID(), ...input };
   students.push(student);
   return student;
 }
 
-export function updateStudent(id: string, input: NewStudent): Student | undefined {
+export function updateStudent(id: string, input: Student): StoredStudent | undefined {
   const student = findStudent(id);
   if (!student) return undefined;
 
