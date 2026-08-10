@@ -7,6 +7,12 @@
     "dev": "tsx watch src/server.ts",
     "dev:vanilla": "tsx watch src/vanilla-server.ts",
     "dev:nodemon": "nodemon --watch src --ext ts --exec tsx src/server.ts",
+    "seed": "tsx mongo-playground/00-seed.ts",
+    "db:create": "tsx mongo-playground/08-create-collections.ts",
+    "db:create:mongoose": "tsx mongoose-playground/04-create-collections.ts",
+    "seed:school": "tsx mongoose-playground/03-seed-school.ts",
+    "hooks": "tsx mongoose-playground/05-hooks-and-virtuals.ts",
+    "validate": "tsx mongoose-playground/06-custom-validation.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "oxlint",
@@ -25,6 +31,7 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.1.0",
-    "mongodb": "^7.5.0"
+    "mongodb": "^7.5.0",
+    "mongoose": "^9.9.1"
   }
 }

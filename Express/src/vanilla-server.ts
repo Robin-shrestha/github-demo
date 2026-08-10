@@ -7,7 +7,7 @@ import {
   listStudents,
   updateStudent,
 } from "./data/studentsData.ts";
-import type { Student } from "./types/studentTypes.ts";
+import type { StudentInput } from "./models/Student.ts";
 
 const PORT = 3001;
 
@@ -16,7 +16,6 @@ function sendJson(res: ServerResponse, status: number, body: unknown): void {
   res.end(JSON.stringify(body));
 }
 
-// The body arrives in chunks and has to be collected, then parsed by hand.
 function readJsonBody(req: IncomingMessage): Promise<unknown> {
   return new Promise((resolve, reject) => {
     let raw = "";
@@ -39,7 +38,7 @@ function readJsonBody(req: IncomingMessage): Promise<unknown> {
   });
 }
 
-function validateStudent(body: unknown): Student | null {
+function validateStudent(body: unknown): StudentInput | null {
   if (typeof body !== "object" || body === null) return null;
   const { name, role, avatar } = body as Record<string, unknown>;
   if (typeof name !== "string" || name.trim() === "") return null;
@@ -92,7 +91,6 @@ const server = createServer(async (req: IncomingMessage, res: ServerResponse) =>
     return;
   }
 
-  // The dynamic :id segment has to be matched manually
   const match = path.match(/^\/students\/([^/]+)$/);
   if (match) {
     const id = match[1];

@@ -1,5 +1,4 @@
-// Describes the variables this app expects in .env, the same way Reactjs
-// declares its VITE_ variables. Types only, nothing is loaded here.
+// Types only. Values are loaded by dotenv in constants/env.ts.
 declare namespace NodeJS {
   interface ProcessEnv {
     readonly MONGO_URI?: string;

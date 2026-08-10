@@ -1,6 +1,6 @@
 import { students } from "./db/students.ts";
 import { connectToDatabase, disconnectFromDatabase } from "./db/client.ts";
-import type { Student } from "../src/types/studentTypes.ts";
+import type { Student } from "./db/studentTypes.ts";
 
 const FIRST_NAMES = [
   "Aarav",

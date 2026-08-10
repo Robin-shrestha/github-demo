@@ -8,7 +8,7 @@ import {
 } from "../data/studentsData.ts";
 import { validateStudent } from "../middleware/validateStudent.ts";
 import { NotFound } from "../types/httpError.ts";
-import type { Student } from "../types/studentTypes.ts";
+import type { StudentInput } from "../models/Student.ts";
 
 const router = Router();
 // const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -37,11 +37,11 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", validateStudent, (req, res) => {
-  res.status(201).json(addStudent(req.body as Student));
+  res.status(201).json(addStudent(req.body as StudentInput));
 });
 
 router.put("/:id", validateStudent, (req, res) => {
-  const updated = updateStudent(req.params.id, req.body as Student);
+  const updated = updateStudent(req.params.id, req.body as StudentInput);
 
   if (!updated) {
     throw new NotFound(`No student with id ${req.params.id}`);
