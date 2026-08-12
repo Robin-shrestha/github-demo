@@ -13,6 +13,7 @@
     "seed:school": "tsx mongoose-playground/03-seed-school.ts",
     "hooks": "tsx mongoose-playground/05-hooks-and-virtuals.ts",
     "validate": "tsx mongoose-playground/06-custom-validation.ts",
+    "statics": "tsx mongoose-playground/07-querys-and-statics.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "oxlint",

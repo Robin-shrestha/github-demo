@@ -6,8 +6,6 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 await connectWithMongoose();
 
 try {
-  await UserModel.deleteMany({});
-
   const user = await UserModel.create({
     name: "Priya Thapa",
     email: "Priya.Thapa@LF.edu  ",
@@ -40,8 +38,6 @@ try {
   console.log("fullAddress  :", moved?.get("fullAddress"));
   console.log("stored       :", Object.keys(moved?.toObject() ?? {}).includes("fullAddress"));
   console.log("queryable    :", await UserModel.countDocuments({ isAdult: true }));
-
-  await UserModel.deleteMany({});
 } finally {
   await disconnectMongoose();
 }
