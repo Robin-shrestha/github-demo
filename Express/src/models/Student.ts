@@ -1,4 +1,5 @@
 import { model, Schema, type InferSchemaType } from "mongoose";
+import { toJSONOptions } from "./schemaOptions.ts";
 
 export const ROLES = ["Frontend", "Backend", "Fullstack", "QA", "DevOps"];
 
@@ -9,7 +10,7 @@ const studentSchema = new Schema(
     avatar: { type: String, default: "https://i.pravatar.cc/150" },
     courses: [{ type: Schema.Types.ObjectId, ref: "Course" }],
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: toJSONOptions }
 );
 
 export type Student = InferSchemaType<typeof studentSchema>;

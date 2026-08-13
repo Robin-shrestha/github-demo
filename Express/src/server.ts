@@ -1,5 +1,6 @@
 import express from "express";
 import { envConstants } from "./constants/env.ts";
+import { connectWithMongoose } from "./config/mongoose.ts";
 import { requestLogger } from "./middleware/requestLogger.ts";
 import { notFound } from "./middleware/notFound.ts";
 import { errorHandler } from "./middleware/errorHandler.ts";
@@ -20,6 +21,14 @@ app.use("/students", studentsRouter);
 // Both of these must come last, and in this order.
 app.use(notFound);
 app.use(errorHandler);
+
+try {
+  await connectWithMongoose();
+} catch (err) {
+  console.error("Could not connect to MongoDB. Is it running? Try npm run db:start");
+  console.error(err);
+  process.exit(1);
+}
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

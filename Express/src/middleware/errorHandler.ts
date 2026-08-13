@@ -7,14 +7,28 @@ export function errorHandler(
   res: Response,
   _next: NextFunction
 ): void {
-  const status = err instanceof HttpError ? err.status : getStatus(err);
-  const message = err instanceof Error ? err.message : "Internal Server Error";
+  const { status, message } = describe(err);
 
   if (status >= 500) {
     console.error(err);
   }
 
   res.status(status).json({ error: message });
+}
+
+function describe(err: unknown): { status: number; message: string } {
+  if (err instanceof HttpError) {
+    return { status: err.status, message: err.message };
+  }
+
+  if (err instanceof Error && err.name === "CastError") {
+    return { status: 400, message: "Invalid id" };
+  }
+
+  return {
+    status: getStatus(err),
+    message: err instanceof Error ? err.message : "Internal Server Error",
+  };
 }
 
 function getStatus(err: unknown): number {

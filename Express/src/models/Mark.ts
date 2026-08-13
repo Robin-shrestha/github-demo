@@ -1,4 +1,5 @@
 import { model, Schema, type InferSchemaType } from "mongoose";
+import { toJSONOptions } from "./schemaOptions.ts";
 
 export const ASSESSMENTS = ["quiz", "assignment", "midterm", "final"];
 
@@ -12,7 +13,7 @@ const markSchema = new Schema(
     maxScore: { type: Number, required: true, min: 1 },
     gradedAt: { type: Date, default: Date.now },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: toJSONOptions }
 );
 
 markSchema.index({ student: 1, course: 1, assessment: 1 }, { unique: true });

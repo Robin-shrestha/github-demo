@@ -1,4 +1,5 @@
 import { model, Schema, type InferSchemaType } from "mongoose";
+import { toJSONOptions } from "./schemaOptions.ts";
 
 const courseSchema = new Schema(
   {
@@ -8,9 +9,14 @@ const courseSchema = new Schema(
     isActive: { type: Boolean, default: true },
     teacher: { type: Schema.Types.ObjectId, ref: "Teacher", required: true },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: toJSONOptions }
 );
 
+courseSchema.virtual("students", {
+  ref: "Student",
+  localField: "_id",
+  foreignField: "courses",
+});
 export type Course = InferSchemaType<typeof courseSchema>;
 
 export const CourseModel = model("Course", courseSchema);
