@@ -1,17 +1,19 @@
 import { model, Schema, type InferSchemaType } from "mongoose";
 import { toJSONOptions } from "./schemaOptions.ts";
 
-export const ROLES = ["Frontend", "Backend", "Fullstack", "QA", "DevOps"];
+export const ROLES = ["Frontend", "Backend", "Fullstack", "QA", "DevOps"] as const;
 
 const studentSchema = new Schema(
   {
     name: { type: String, required: true, trim: true },
-    role: { type: String, required: true, enum: ROLES },
+    role: { type: String, required: true, enum: [...ROLES] },
     avatar: { type: String, default: "https://i.pravatar.cc/150" },
     courses: [{ type: Schema.Types.ObjectId, ref: "Course" }],
   },
   { timestamps: true, toJSON: toJSONOptions }
 );
+
+export type Role = (typeof ROLES)[number];
 
 export type Student = InferSchemaType<typeof studentSchema>;
 

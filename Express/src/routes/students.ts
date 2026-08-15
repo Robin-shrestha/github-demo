@@ -1,11 +1,33 @@
 import { Router } from "express";
-import { getStudent, listStudents } from "../controllers/studentsController.ts";
-import { findStudents } from "../services/studentsService.ts";
+import {
+  deleteStudent,
+  getStudent,
+  listStudents,
+  patchStudent,
+  postStudent,
+  putStudent,
+} from "../controllers/studentsController.ts";
+import { validate } from "../middleware/validate.ts";
+import {
+  createStudentSchema,
+  listStudentsQuerySchema,
+  patchStudentSchema,
+  studentIdSchema,
+} from "../validation/studentSchemas.ts";
 
 const router = Router();
 
-router.get("/", listStudents);
+router.get("/", validate({ query: listStudentsQuerySchema }), listStudents);
 
-router.get("/:id", getStudent);
+router.get("/:id", validate({ params: studentIdSchema }), getStudent);
+
+router.post("/", validate({ body: createStudentSchema }), postStudent);
+
+// PUT and PATCH differ only in what the body must contain.
+router.put("/:id", validate({ params: studentIdSchema, body: createStudentSchema }), putStudent);
+
+router.patch("/:id", validate({ params: studentIdSchema, body: patchStudentSchema }), patchStudent);
+
+router.delete("/:id", validate({ params: studentIdSchema }), deleteStudent);
 
 export default router;

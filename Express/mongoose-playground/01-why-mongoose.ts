@@ -17,7 +17,7 @@ try {
 }
 
 try {
-  await StudentModel.create({ name: "Wrong Role", role: "Designer" });
+  await StudentModel.create({ name: "Wrong Role", role: "Designer" } as never);
 } catch (err) {
   console.log("bad role rejected :", (err as Error).message);
 }
