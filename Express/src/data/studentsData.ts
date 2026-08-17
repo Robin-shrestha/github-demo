@@ -2,13 +2,47 @@ import { randomUUID } from "node:crypto";
 import type { StudentInput } from "../models/Student.ts";
 
 type StoredStudent = StudentInput & { id: number | string };
+/**
+ *
+ * This data service is just for the vanilla server demo
+ */
 
 let students: StoredStudent[] = [
-  { id: 1, name: "Aarav Sharma", role: "Frontend", avatar: "https://i.pravatar.cc/150?img=1" },
-  { id: 2, name: "Priya Thapa", role: "Backend", avatar: "https://i.pravatar.cc/150?img=5" },
-  { id: 3, name: "Bikash Rai", role: "Fullstack", avatar: "https://i.pravatar.cc/150?img=12" },
-  { id: 4, name: "Sita Gurung", role: "Frontend", avatar: "https://i.pravatar.cc/150?img=20" },
-  { id: 5, name: "Rohan KC", role: "Backend", avatar: "https://i.pravatar.cc/150?img=32" },
+  {
+    id: 1,
+    name: "Aarav Sharma",
+    role: "Frontend",
+    email: "aarav@lf.edu",
+    avatar: "https://i.pravatar.cc/150?img=1",
+  },
+  {
+    id: 2,
+    name: "Priya Thapa",
+    role: "Backend",
+    email: "priya@lf.edu",
+    avatar: "https://i.pravatar.cc/150?img=5",
+  },
+  {
+    id: 3,
+    name: "Bikash Rai",
+    role: "Fullstack",
+    email: "bikash@lf.edu",
+    avatar: "https://i.pravatar.cc/150?img=12",
+  },
+  {
+    id: 4,
+    name: "Sita Gurung",
+    role: "Frontend",
+    email: "sita@lf.edu",
+    avatar: "https://i.pravatar.cc/150?img=20",
+  },
+  {
+    id: 5,
+    name: "Rohan KC",
+    role: "Backend",
+    email: "rohan@lf.edu",
+    avatar: "https://i.pravatar.cc/150?img=32",
+  },
 ];
 
 export function listStudents(): StoredStudent[] {
@@ -31,6 +65,7 @@ export function updateStudent(id: string, input: StudentInput): StoredStudent | 
 
   student.name = input.name;
   student.role = input.role;
+  student.email = input.email;
   student.avatar = input.avatar;
   return student;
 }

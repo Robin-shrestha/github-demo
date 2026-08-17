@@ -20,8 +20,8 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { DuplicateEmailError } from "../api/students";
-import type { Student } from "../types/types";
+import { ApiError } from "../api/students";
+import { ROLES, type Student } from "../types/types";
 
 const AVATAR_OPTIONS = [
   "https://i.pravatar.cc/300?img=1",
@@ -31,33 +31,22 @@ const AVATAR_OPTIONS = [
   "https://i.pravatar.cc/300?img=32",
 ];
 
-const ROLE_OPTIONS = ["Frontend", "Backend", "Fullstack", "DevOps", "Data", "Other"];
-
-const OTHER_ROLE = "Other";
-
-const studentFormSchema = z
-  .object({
-    name: z.string().min(1, "Name is required"),
-    role: z.string().min(1, "Role is required"),
-    roleDescription: z.string().optional(),
-    email: z.email("Enter a valid email"),
-    bio: z.string().optional(),
-    experienceYears: z.number().min(0, "Must be 0 or more").optional(),
-    avatar: z.string().min(1, "Choose an avatar"),
-    // A dynamic list. Each row is an object so useFieldArray can give it a
-    // stable key; we flatten to string[] on submit.
-    hobbies: z.array(z.object({ value: z.string().min(1, "Hobby can't be empty") })),
-  })
-  .refine((data) => data.role !== OTHER_ROLE || Boolean(data.roleDescription?.trim()), {
-    path: ["roleDescription"],
-    message: "Please describe the role",
-  });
+const studentFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  role: z.enum(ROLES, { error: "Role is required" }),
+  email: z.email("Enter a valid email"),
+  bio: z.string().optional(),
+  experienceYears: z.number().min(0, "Must be 0 or more").optional(),
+  avatar: z.string().min(1, "Choose an avatar"),
+  // A dynamic list. Each row is an object so useFieldArray can give it a
+  // stable key; we flatten to string[] on submit.
+  hobbies: z.array(z.object({ value: z.string().min(1, "Hobby can't be empty") })),
+});
 
 type AddStudentFormValues = z.infer<typeof studentFormSchema>;
 const defaultValues = {
   name: "",
-  role: "",
-  roleDescription: "",
+  role: "" as (typeof ROLES)[number],
   email: "",
   bio: "",
   experienceYears: undefined,
@@ -74,7 +63,6 @@ function AddStudentForm({ onAddStudent }: AddStudentFormProps) {
     handleSubmit,
     control,
     setError,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<AddStudentFormValues>({
     resolver: zodResolver(studentFormSchema),
@@ -82,14 +70,13 @@ function AddStudentForm({ onAddStudent }: AddStudentFormProps) {
   });
 
   const { fields, append, remove } = useFieldArray({ control, name: "hobbies" });
-  const isOtherRole = watch("role") === OTHER_ROLE;
 
   async function onSubmit(data: AddStudentFormValues) {
     const hobbies = data.hobbies.map((h) => h.value.trim()).filter(Boolean);
     try {
       await onAddStudent({
         name: data.name,
-        role: (isOtherRole ? data.roleDescription : data.role) || "Unassigned",
+        role: data.role,
         avatar: data.avatar,
         email: data.email,
         bio: data.bio?.trim() || undefined,
@@ -97,11 +84,19 @@ function AddStudentForm({ onAddStudent }: AddStudentFormProps) {
         hobbies: hobbies.length ? hobbies : undefined,
       });
     } catch (err: unknown) {
-      if (err instanceof DuplicateEmailError) {
+      if (err instanceof ApiError && err.status === 409) {
         setError("email", { message: "That email is already registered" });
-      } else {
-        setError("root", { message: "Something went wrong. Please try again." });
+        return;
       }
+
+      if (err instanceof ApiError && Object.keys(err.fields).length > 0) {
+        for (const [field, message] of Object.entries(err.fields)) {
+          setError(field as keyof AddStudentFormValues, { message });
+        }
+        return;
+      }
+
+      setError("root", { message: "Something went wrong. Please try again." });
     }
   }
 
@@ -129,7 +124,7 @@ function AddStudentForm({ onAddStudent }: AddStudentFormProps) {
               </InputLabel>
               <Select {...field} value={field.value ?? ""} label="Role" size="small" fullWidth>
                 <MenuItem value="">-- Select a role --</MenuItem>
-                {ROLE_OPTIONS.map((option) => (
+                {ROLES.map((option) => (
                   <MenuItem key={option} value={option}>
                     {option}
                   </MenuItem>
@@ -139,17 +134,6 @@ function AddStudentForm({ onAddStudent }: AddStudentFormProps) {
           )}
         />
       </div>
-
-      {isOtherRole && (
-        <TextField
-          label="Please specify the role"
-          size="small"
-          fullWidth
-          {...register("roleDescription")}
-          error={!!errors.roleDescription}
-          helperText={errors.roleDescription?.message}
-        />
-      )}
 
       <div className="form-row">
         <TextField

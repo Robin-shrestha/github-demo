@@ -27,6 +27,7 @@ const seedSchool = async (): Promise<void> => {
     await Promise.all([
       TeacherModel.syncIndexes(),
       CourseModel.syncIndexes(),
+      StudentModel.syncIndexes(),
       MarkModel.syncIndexes(),
     ]);
 
@@ -75,19 +76,27 @@ const seedSchool = async (): Promise<void> => {
       "Rohan KC": ["NF102"],
     };
 
-    const roles: Record<string, string> = {
-      "Priya Thapa": "Frontend",
-      "Bikash Rai": "Fullstack",
-      "Anjali Karki": "Frontend",
-      "Suman Lama": "Backend",
-      "Rohan KC": "Backend",
+    const profiles: Record<string, { role: string; email: string; hobbies: string[] }> = {
+      "Priya Thapa": { role: "Frontend", email: "priya.thapa@lf.edu", hobbies: ["reading"] },
+      "Bikash Rai": {
+        role: "Fullstack",
+        email: "bikash.rai@lf.edu",
+        hobbies: ["cycling", "chess"],
+      },
+      "Anjali Karki": { role: "Frontend", email: "anjali.karki@lf.edu", hobbies: ["painting"] },
+      "Suman Lama": { role: "Backend", email: "suman.lama@lf.edu", hobbies: ["football"] },
+      "Rohan KC": { role: "Backend", email: "rohan.kc@lf.edu", hobbies: ["gaming", "guitar"] },
     };
 
     const students = await StudentModel.insertMany(
       Object.keys(enrolments).map((name, i) => ({
         name,
-        role: roles[name],
+        role: profiles[name].role,
+        email: profiles[name].email,
         avatar: `https://i.pravatar.cc/150?img=${i + 1}`,
+        bio: `${profiles[name].role} student at LF.`,
+        experienceYears: i,
+        hobbies: profiles[name].hobbies,
         courses: enrolments[name].map((code) => courseId.get(code)),
       }))
     );

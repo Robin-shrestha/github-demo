@@ -4,7 +4,7 @@ import { Button, Card, CardActions, CardContent, CardMedia, Typography } from "@
 import type { Student } from "../types/types";
 
 interface StudentCardProps extends Student {
-  onDelete: (id: number | string) => void;
+  onDelete: (id: string) => void;
 }
 
 function StudentCard({ id, name, role, avatar, onDelete }: StudentCardProps) {

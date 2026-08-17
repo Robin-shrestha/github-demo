@@ -4,7 +4,11 @@ import { ROLES } from "../models/Student.ts";
 export const createStudentSchema = z.object({
   name: z.string().trim().min(2).max(80),
   role: z.enum(ROLES),
+  email: z.email(),
   avatar: z.url().optional(),
+  bio: z.string().trim().max(500).optional(),
+  experienceYears: z.number().int().min(0).max(60).optional(),
+  hobbies: z.array(z.string().trim().min(1)).max(10).optional(),
 });
 
 // PUT reuses createStudentSchema: a replacement must carry the whole resource.

@@ -1,10 +1,11 @@
+export const ROLES = ["Frontend", "Backend", "Fullstack", "QA", "DevOps"] as const;
+
 export interface Student {
-  // json-server assigns numeric ids to seed data, string uuids to new POSTs.
-  id: number | string;
+  id: string;
   name: string;
   role: string;
+  email: string;
   avatar: string;
-  email?: string;
   bio?: string;
   experienceYears?: number;
   hobbies?: string[];

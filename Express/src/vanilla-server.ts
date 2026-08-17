@@ -40,11 +40,12 @@ function readJsonBody(req: IncomingMessage): Promise<unknown> {
 
 function validateStudent(body: unknown): StudentInput | null {
   if (typeof body !== "object" || body === null) return null;
-  const { name, role, avatar } = body as Record<string, unknown>;
+  const { name, role, email, avatar } = body as Record<string, unknown>;
   if (typeof name !== "string" || name.trim() === "") return null;
   if (typeof role !== "string" || !ROLES.includes(role as Role)) return null;
+  if (typeof email !== "string" || !email.includes("@")) return null;
   if (typeof avatar !== "string" || avatar.trim() === "") return null;
-  return { name, role: role as Role, avatar };
+  return { name, role: role as Role, email, avatar };
 }
 
 const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
