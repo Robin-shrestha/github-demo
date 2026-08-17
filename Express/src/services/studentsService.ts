@@ -9,6 +9,7 @@ interface ListOptions {
 
 export function findStudents({ role, page, limit }: ListOptions) {
   const filter = role ? { role } : {};
+  debugger;
 
   return StudentModel.find(filter)
     .populate("courses", "title code")
@@ -41,6 +42,7 @@ export function createStudent(input: CreateStudentInput) {
 }
 
 export function updateStudent(id: string, changes: CreateStudentInput | PatchStudentInput) {
+  debugger;
   return StudentModel.findByIdAndUpdate(id, changes, {
     returnDocument: "after",
     // Without this the schema rules a create would enforce are skipped.

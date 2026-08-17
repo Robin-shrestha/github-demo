@@ -7,6 +7,7 @@
     "dev": "tsx watch src/server.ts",
     "dev:vanilla": "tsx watch src/vanilla-server.ts",
     "dev:nodemon": "nodemon --watch src --ext ts --exec tsx src/server.ts",
+    "dev:debug": "tsx watch --inspect src/server.ts",
     "seed": "tsx mongo-playground/00-seed.ts",
     "db:create": "tsx mongo-playground/08-create-collections.ts",
     "db:create:mongoose": "tsx mongoose-playground/04-create-collections.ts",
