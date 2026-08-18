@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { Student } from "../types/types";
-import { STUDENTS_ENDPOINT } from "./endpoints";
+import { API_BASE_URL, STUDENTS_ENDPOINT } from "./endpoints";
 
 const studentApiSchema = z.object({
   id: z.string(),
@@ -54,13 +54,17 @@ async function failOnError(response: Response): Promise<void> {
   throw new ApiError(response.status, parsed.data.error, fields);
 }
 
+function resolveAvatarUrl(avatar: string): string {
+  return avatar.startsWith("http") ? avatar : `${API_BASE_URL}${avatar}`;
+}
+
 function toStudent(raw: RawStudent): Student {
   return {
     id: raw.id,
     name: raw.name,
     role: raw.role,
     email: raw.email,
-    avatar: raw.avatar,
+    avatar: resolveAvatarUrl(raw.avatar),
     bio: raw.bio,
     experienceYears: raw.experienceYears,
     hobbies: raw.hobbies,
@@ -142,4 +146,26 @@ export async function deleteStudent(id: string): Promise<void> {
 
   // 204 has no body, so nothing is parsed here.
   await failOnError(response);
+}
+
+export async function uploadStudentPhoto(id: string, file: File): Promise<Student> {
+  const formData = new FormData();
+  formData.append("photo", file);
+
+  // No Content-Type header here. The browser sets multipart/form-data with
+  // the correct boundary itself; setting it by hand breaks the request.
+  const response = await fetch(`${STUDENTS_ENDPOINT}/${id}/photo`, {
+    method: "POST",
+    body: formData,
+  });
+
+  await failOnError(response);
+
+  const parsed = studentApiSchema.safeParse(await response.json());
+
+  if (!parsed.success) {
+    throw new Error(`Unexpected response shape from POST /students/${id}/photo`);
+  }
+
+  return toStudent(parsed.data);
 }

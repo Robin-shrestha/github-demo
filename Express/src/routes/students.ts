@@ -7,6 +7,7 @@ import {
   postStudent,
   putStudent,
 } from "../controllers/studentsController.ts";
+import { uploadStudentPhotoLocal } from "../controllers/studentPhotoLocal.ts";
 import { validate } from "../middleware/validate.ts";
 import {
   createStudentSchema,
@@ -29,5 +30,7 @@ router.put("/:id", validate({ params: studentIdSchema, body: createStudentSchema
 router.patch("/:id", validate({ params: studentIdSchema, body: patchStudentSchema }), patchStudent);
 
 router.delete("/:id", validate({ params: studentIdSchema }), deleteStudent);
+
+router.post("/:id/photo", validate({ params: studentIdSchema }), ...uploadStudentPhotoLocal);
 
 export default router;

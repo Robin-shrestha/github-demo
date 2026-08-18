@@ -51,3 +51,7 @@ export function updateStudent(id: string, changes: CreateStudentInput | PatchStu
 export function removeStudent(id: string) {
   return StudentModel.findByIdAndDelete(id);
 }
+
+export function updateStudentAvatar(id: string, avatar: string) {
+  return StudentModel.findByIdAndUpdate(id, { avatar }, { returnDocument: "after" });
+}
