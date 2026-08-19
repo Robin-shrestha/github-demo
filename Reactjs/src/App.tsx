@@ -10,6 +10,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import StudentProfilePage from "./routes/StudentProfilePage";
 import AddStudentPage from "./routes/AddStudentPage";
 import LoginPage from "./routes/LoginPage";
+import Signup from "./routes/Auth/Signup";
 import NotFoundPage from "./routes/NotFoundPage";
 import RouteError from "./routes/RouteError";
 import DocsListPage from "./routes/DocsListPage";
@@ -31,6 +32,7 @@ const router = createBrowserRouter(
       <Route errorElement={<RouteError />}>
         <Route index element={<CardGrid />} />
         <Route path="login" element={<LoginPage />} />
+        <Route path="signup" element={<Signup />} />
         <Route path="docs" element={<DocsListPage />} />
         <Route path="docs/:slug" element={<DocPage />} />
         <Route path="students/:id" element={<StudentProfilePage />} />

@@ -1,0 +1,21 @@
+import { model, Schema, type InferSchemaType } from "mongoose";
+import { toJSONOptions } from "./schemaOptions.ts";
+
+const userSchema = new Schema(
+  {
+    firstName: { type: String, required: true, trim: true },
+    lastName: { type: String, required: true, trim: true },
+    username: { type: String, required: true, unique: true, trim: true },
+    dateOfBirth: { type: Date, required: true },
+    address: { type: String, required: true, trim: true },
+    profilePic: { type: String, required: true },
+    idDocuments: { type: [String], default: undefined },
+  },
+  { timestamps: true, toJSON: toJSONOptions }
+);
+
+export type User = InferSchemaType<typeof userSchema>;
+
+export type UserInput = Omit<User, "createdAt" | "updatedAt">;
+
+export const UserModel = model("User", userSchema);

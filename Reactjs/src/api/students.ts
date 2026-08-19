@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { Student } from "../types/types";
-import { API_BASE_URL, STUDENTS_ENDPOINT } from "./endpoints";
+import { STUDENTS_ENDPOINT } from "./endpoints";
+import { failOnError, resolveFileUrl } from "./httpClient";
 
 const studentApiSchema = z.object({
   id: z.string(),
@@ -13,50 +14,7 @@ const studentApiSchema = z.object({
   hobbies: z.array(z.string()).optional(),
 });
 
-const errorSchema = z.object({
-  error: z.string(),
-  details: z.array(z.object({ field: z.string(), message: z.string() })).optional(),
-});
-
 type RawStudent = z.infer<typeof studentApiSchema>;
-
-// Carries the per field messages the API sends with a 400 so a form can put
-// each one next to the input that caused it.
-export class ApiError extends Error {
-  status: number;
-  fields: Record<string, string>;
-
-  constructor(status: number, message: string, fields: Record<string, string> = {}) {
-    super(message);
-    this.name = "ApiError";
-    this.status = status;
-    this.fields = fields;
-  }
-}
-
-// fetch only rejects on a network failure, so a 400 or 500 arrives here as a
-// perfectly normal response and has to be checked by hand.
-async function failOnError(response: Response): Promise<void> {
-  if (response.ok) {
-    return;
-  }
-
-  const parsed = errorSchema.safeParse(await response.json().catch(() => null));
-
-  if (!parsed.success) {
-    throw new ApiError(response.status, `Request failed with status ${response.status}`);
-  }
-
-  const fields = Object.fromEntries(
-    (parsed.data.details ?? []).map((detail) => [detail.field, detail.message])
-  );
-
-  throw new ApiError(response.status, parsed.data.error, fields);
-}
-
-function resolveAvatarUrl(avatar: string): string {
-  return avatar.startsWith("http") ? avatar : `${API_BASE_URL}${avatar}`;
-}
 
 function toStudent(raw: RawStudent): Student {
   return {
@@ -64,7 +22,7 @@ function toStudent(raw: RawStudent): Student {
     name: raw.name,
     role: raw.role,
     email: raw.email,
-    avatar: resolveAvatarUrl(raw.avatar),
+    avatar: resolveFileUrl(raw.avatar),
     bio: raw.bio,
     experienceYears: raw.experienceYears,
     hobbies: raw.hobbies,

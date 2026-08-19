@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { ApiError } from "../api/students";
+import { ApiError } from "../api/httpClient";
 import { ROLES, type Student } from "../types/types";
 
 const AVATAR_OPTIONS = [

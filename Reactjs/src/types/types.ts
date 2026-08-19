@@ -10,3 +10,14 @@ export interface Student {
   experienceYears?: number;
   hobbies?: string[];
 }
+
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  dateOfBirth: string;
+  address: string;
+  profilePic: string;
+  idDocuments?: string[];
+}
