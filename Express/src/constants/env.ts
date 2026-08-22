@@ -17,4 +17,5 @@ export const envConstants = {
   MONGO_DB_NAME: required("MONGO_DB_NAME"),
   PORT: Number(process.env.PORT ?? 3001),
   CLIENT_ORIGIN: required("CLIENT_ORIGIN"),
+  JWT_SECRET: required("JWT_SECRET"),
 };

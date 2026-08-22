@@ -65,6 +65,13 @@ function describe(err: unknown): Described {
     return { status: 400, message: err.message };
   }
 
+  if (
+    err instanceof Error &&
+    (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError")
+  ) {
+    return { status: 401, message: "Invalid or expired token" };
+  }
+
   if (isDuplicateKey(err)) {
     return { status: 409, message: "Already exists" };
   }

@@ -17,7 +17,6 @@ import { ApiError } from "../api/httpClient";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
 const MAX_ID_DOCUMENTS = 10;
-const MIN_ID_DOCUMENTS = 2;
 
 const signupSchema = z.object({
   firstName: z.string().trim().min(1, "First name is required"),
@@ -27,6 +26,8 @@ const signupSchema = z.object({
     .trim()
     .min(3, "At least 3 characters")
     .regex(/^[a-zA-Z0-9_]+$/, "Letters, numbers and underscore only"),
+  email: z.string().trim().min(1, "Email is required").email("Enter a valid email address"),
+  password: z.string().min(8, "At least 8 characters"),
   dateOfBirth: z.string().min(1, "Date of birth is required"),
   address: z.string().trim().min(1, "Address is required"),
   profilePic: z
@@ -35,7 +36,6 @@ const signupSchema = z.object({
     .refine((file) => file.size <= MAX_FILE_SIZE, "Image must be 2MB or smaller"),
   idDocuments: z
     .array(z.instanceof(File))
-    .min(MIN_ID_DOCUMENTS, `Min of ${MIN_ID_DOCUMENTS} documents required`)
     .max(MAX_ID_DOCUMENTS, `Up to ${MAX_ID_DOCUMENTS} documents`)
     .refine(
       (files) =>
@@ -45,7 +45,8 @@ const signupSchema = z.object({
     .refine(
       (files) => files.every((file) => file.size <= MAX_FILE_SIZE),
       "Each document must be 2MB or smaller"
-    ),
+    )
+    .optional(),
 });
 
 export type SignupFormValues = z.infer<typeof signupSchema>;
@@ -54,6 +55,8 @@ const defaultValues: Partial<SignupFormValues> = {
   firstName: "",
   lastName: "",
   username: "",
+  email: "",
+  password: "",
   dateOfBirth: "",
   address: "",
 };
@@ -140,7 +143,7 @@ function SignupForm({ onSignup }: SignupFormProps) {
             return (
               <Stack spacing={1}>
                 <Typography variant="subtitle2">
-                  Valid IDs (demo: multiple files, up to {MAX_ID_DOCUMENTS})
+                  Valid IDs (optional, demo: multiple files, up to {MAX_ID_DOCUMENTS})
                 </Typography>
                 <input
                   ref={idDocumentsInputRef}
@@ -220,6 +223,26 @@ function SignupForm({ onSignup }: SignupFormProps) {
           {...register("username")}
           error={!!errors.username}
           helperText={errors.username?.message}
+        />
+
+        <TextField
+          label="Email"
+          type="email"
+          size="small"
+          fullWidth
+          {...register("email")}
+          error={!!errors.email}
+          helperText={errors.email?.message}
+        />
+
+        <TextField
+          label="Password"
+          type="password"
+          size="small"
+          fullWidth
+          {...register("password")}
+          error={!!errors.password}
+          helperText={errors.password?.message}
         />
 
         <TextField

@@ -5,5 +5,6 @@ declare namespace NodeJS {
     readonly MONGO_DB_NAME?: string;
     readonly PORT?: string;
     readonly CLIENT_ORIGIN?: string;
+    readonly JWT_SECRET?: string;
   }
 }

@@ -5,7 +5,7 @@ import type { Request, Response } from "express";
 import { createUser } from "../services/usersService.ts";
 import { BadRequest } from "../types/httpError.ts";
 import { validate } from "../middleware/validate.ts";
-import { signupSchema, type SignupInput } from "../validation/userSchemas.ts";
+import { signupSchema } from "../validation/userSchemas.ts";
 
 const storage = multer.diskStorage({
   destination: "uploads/",

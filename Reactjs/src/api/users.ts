@@ -9,6 +9,7 @@ const userApiSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   username: z.string(),
+  email: z.string(),
   dateOfBirth: z.string(),
   address: z.string(),
   profilePic: z.string(),
@@ -23,6 +24,7 @@ function toUser(raw: RawUser): User {
     firstName: raw.firstName,
     lastName: raw.lastName,
     username: raw.username,
+    email: raw.email,
     dateOfBirth: raw.dateOfBirth,
     address: raw.address,
     profilePic: resolveFileUrl(raw.profilePic),
@@ -35,6 +37,8 @@ export async function signupUser(values: SignupFormValues): Promise<User> {
   formData.append("firstName", values.firstName);
   formData.append("lastName", values.lastName);
   formData.append("username", values.username);
+  formData.append("email", values.email);
+  formData.append("password", values.password);
   formData.append("dateOfBirth", values.dateOfBirth);
   formData.append("address", values.address);
   formData.append("profilePic", values.profilePic);
