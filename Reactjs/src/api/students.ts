@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { Student } from "../types/types";
 import { STUDENTS_ENDPOINT } from "./endpoints";
-import { failOnError, resolveFileUrl } from "./httpClient";
+import { authHeader, failOnError, resolveFileUrl } from "./httpClient";
 
 const studentApiSchema = z.object({
   id: z.string(),
@@ -60,10 +60,13 @@ export async function getStudentById(id: string): Promise<Student | null> {
   return toStudent(parsed.data);
 }
 
-export async function addStudent(newStudent: Omit<Student, "id">): Promise<Student> {
+export async function addStudent(
+  newStudent: Omit<Student, "id">,
+  token: string
+): Promise<Student> {
   const response = await fetch(STUDENTS_ENDPOINT, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeader(token) },
     body: JSON.stringify(newStudent),
   });
 
@@ -99,8 +102,11 @@ export async function patchStudent(
   return toStudent(parsed.data);
 }
 
-export async function deleteStudent(id: string): Promise<void> {
-  const response = await fetch(`${STUDENTS_ENDPOINT}/${id}`, { method: "DELETE" });
+export async function deleteStudent(id: string, token: string): Promise<void> {
+  const response = await fetch(`${STUDENTS_ENDPOINT}/${id}`, {
+    method: "DELETE",
+    headers: authHeader(token),
+  });
 
   // 204 has no body, so nothing is parsed here.
   await failOnError(response);

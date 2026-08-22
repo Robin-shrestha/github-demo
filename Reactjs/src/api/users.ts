@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { User } from "../types/types";
 import type { SignupFormValues } from "../components/SignupForm";
 import { USERS_ENDPOINT } from "./endpoints";
-import { failOnError, resolveFileUrl } from "./httpClient";
+import { authHeader, failOnError, resolveFileUrl } from "./httpClient";
 
 const userApiSchema = z.object({
   id: z.string(),
@@ -56,6 +56,49 @@ export async function signupUser(values: SignupFormValues): Promise<User> {
 
   if (!parsed.success) {
     throw new Error("Unexpected response shape from POST /users/signup");
+  }
+
+  return toUser(parsed.data);
+}
+
+export interface LoginCredentials {
+  username: string;
+  password: string;
+}
+
+const loginApiSchema = z.object({ token: z.string() });
+
+// Returns just the JWT. The caller (LoginPage) follows up with
+// getCurrentUser to get the profile that goes with it.
+export async function loginUser(credentials: LoginCredentials): Promise<string> {
+  const response = await fetch(`${USERS_ENDPOINT}/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(credentials),
+  });
+
+  await failOnError(response);
+
+  const parsed = loginApiSchema.safeParse(await response.json());
+
+  if (!parsed.success) {
+    throw new Error("Unexpected response shape from POST /users/login");
+  }
+
+  return parsed.data.token;
+}
+
+export async function getCurrentUser(token: string): Promise<User> {
+  const response = await fetch(`${USERS_ENDPOINT}/me`, {
+    headers: authHeader(token),
+  });
+
+  await failOnError(response);
+
+  const parsed = userApiSchema.safeParse(await response.json());
+
+  if (!parsed.success) {
+    throw new Error("Unexpected response shape from GET /users/me");
   }
 
   return toUser(parsed.data);

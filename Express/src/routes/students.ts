@@ -8,6 +8,7 @@ import {
   putStudent,
 } from "../controllers/studentsController.ts";
 import { uploadStudentPhotoLocal } from "../controllers/studentPhotoLocal.ts";
+import { authenticate } from "../middleware/authenticate.ts";
 import { validate } from "../middleware/validate.ts";
 import {
   createStudentSchema,
@@ -22,14 +23,14 @@ router.get("/", validate({ query: listStudentsQuerySchema }), listStudents);
 
 router.get("/:id", validate({ params: studentIdSchema }), getStudent);
 
-router.post("/", validate({ body: createStudentSchema }), postStudent);
+router.post("/", authenticate, validate({ body: createStudentSchema }), postStudent);
 
 // PUT and PATCH differ only in what the body must contain.
 router.put("/:id", validate({ params: studentIdSchema, body: createStudentSchema }), putStudent);
 
 router.patch("/:id", validate({ params: studentIdSchema, body: patchStudentSchema }), patchStudent);
 
-router.delete("/:id", validate({ params: studentIdSchema }), deleteStudent);
+router.delete("/:id", authenticate, validate({ params: studentIdSchema }), deleteStudent);
 
 router.post("/:id/photo", validate({ params: studentIdSchema }), ...uploadStudentPhotoLocal);
 

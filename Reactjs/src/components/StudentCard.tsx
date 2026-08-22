@@ -4,7 +4,8 @@ import { Button, Card, CardActions, CardContent, CardMedia, Typography } from "@
 import type { Student } from "../types/types";
 
 interface StudentCardProps extends Student {
-  onDelete: (id: string) => void;
+  // Left out entirely for a signed-out visitor — see CardGrid.
+  onDelete?: (id: string) => void;
 }
 
 function StudentCard({ id, name, role, avatar, onDelete }: StudentCardProps) {
@@ -23,9 +24,11 @@ function StudentCard({ id, name, role, avatar, onDelete }: StudentCardProps) {
         <Button component={Link} to={`/students/${id}`} size="small" variant="outlined">
           View Profile
         </Button>
-        <Button size="small" variant="outlined" color="error" onClick={() => onDelete(id)}>
-          Delete
-        </Button>
+        {onDelete && (
+          <Button size="small" variant="outlined" color="error" onClick={() => onDelete(id)}>
+            Delete
+          </Button>
+        )}
       </CardActions>
     </Card>
   );

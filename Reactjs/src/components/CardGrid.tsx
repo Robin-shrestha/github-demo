@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Alert, Box, Button, CircularProgress, Typography } from "@mui/material";
 import StudentCard from "./StudentCard";
 import useStudents from "../hooks/useStudents";
+import { useAppSelector } from "../store/hooks";
 import type { Student } from "../types/types";
 
 // Simulated expensive computation — busy-waits ~400ms so the useMemo demo
@@ -17,6 +18,7 @@ function expensiveSort(students: Student[]): Student[] {
 
 function CardGrid() {
   const { state, removeStudent } = useStudents();
+  const token = useAppSelector((s) => s.auth.token);
   const [renderCount, setRenderCount] = useState(0);
 
   const sortedStudents = useMemo(() => {
@@ -47,7 +49,13 @@ function CardGrid() {
 
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, mb: 3 }}>
         {sortedStudents.map((student) => {
-          return <StudentCard key={student.id} {...student} onDelete={removeStudent} />;
+          return (
+            <StudentCard
+              key={student.id}
+              {...student}
+              onDelete={token ? (id) => removeStudent(id, token) : undefined}
+            />
+          );
         })}
       </Box>
 

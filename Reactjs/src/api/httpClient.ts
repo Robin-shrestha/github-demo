@@ -43,3 +43,8 @@ export async function failOnError(response: Response): Promise<void> {
 export function resolveFileUrl(path: string): string {
   return path.startsWith("http") ? path : `${API_BASE_URL}${path}`;
 }
+
+// Attach to a fetch call's headers to send the JWT: { ...authHeader(token) }
+export function authHeader(token: string): Record<string, string> {
+  return { Authorization: `Bearer ${token}` };
+}
