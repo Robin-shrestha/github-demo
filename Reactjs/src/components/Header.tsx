@@ -17,11 +17,9 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useColorMode } from "../theme/ColorModeContext";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { logout } from "../store/authSlice";
-import { logoutUser } from "../api/users";
+import { logout } from "../auth/authSlice";
+import { logoutUser } from "../auth/authApi";
 
-// Docs and the React-concept demos aren't things you use every visit, so
-// they live behind this menu instead of sitting in the main nav.
 const MORE_LINKS = [
   { to: "/docs", label: "Docs" },
   { to: "/context-demo", label: "Context Demo" },
@@ -37,10 +35,6 @@ function Header() {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   async function handleLogout(): Promise<void> {
-    // Bumps tokenVersion server-side and clears the refresh cookie, so this
-    // is a real revoke, not just clearing local state. If the access token
-    // already expired, the call fails, but logging out locally is still
-    // fine since the session is on its way out either way.
     if (token) {
       await logoutUser(token).catch(() => {});
     }

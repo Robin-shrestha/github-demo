@@ -8,6 +8,7 @@ import { notFound } from "./middleware/notFound.ts";
 import { errorHandler } from "./middleware/errorHandler.ts";
 import studentsRouter from "./routes/students.ts";
 import usersRouter from "./routes/users.ts";
+import authRouter from "./auth/authRoutes.ts";
 import { extendedCors } from "./middleware/cors.ts";
 
 const app = express();
@@ -27,6 +28,7 @@ app.get("/", (req, res) => {
 
 app.use("/students", studentsRouter);
 app.use("/users", usersRouter);
+app.use("/auth", authRouter);
 
 // Both of these must come last, and in this order.
 app.use(notFound);

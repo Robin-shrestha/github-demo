@@ -4,8 +4,9 @@ import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button, CircularProgress, Stack, TextField, Typography } from "@mui/material";
 import { useAppDispatch } from "../store/hooks";
-import { setCredentials } from "../store/authSlice";
-import { getCurrentUser, loginUser } from "../api/users";
+import { setCredentials } from "./authSlice";
+import { getCurrentUser } from "../api/users";
+import { loginUser } from "./authApi";
 
 const loginSchema = z.object({
   username: z.string().trim().min(1, "Username is required"),

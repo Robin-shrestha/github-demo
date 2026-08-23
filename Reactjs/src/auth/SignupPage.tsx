@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography } from "@mui/material";
-import SignupForm, { type SignupFormValues } from "../../components/SignupForm";
-import { signupUser } from "../../api/users";
+import SignupForm, { type SignupFormValues } from "../components/SignupForm";
+import { signupUser } from "./authApi";
 
-function Signup() {
+function SignupPage() {
   const navigate = useNavigate();
 
   async function handleSignup(values: SignupFormValues): Promise<void> {
@@ -19,4 +19,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default SignupPage;

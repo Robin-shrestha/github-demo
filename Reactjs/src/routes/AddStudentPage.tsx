@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import AddStudentForm from "../components/AddStudentForm";
 import { addStudent } from "../api/students";
-import { refreshAccessToken } from "../api/users";
+import { refreshAccessToken } from "../auth/authApi";
 import { withTokenRefresh } from "../api/httpClient";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { setToken } from "../store/authSlice";
+import { setToken } from "../auth/authSlice";
 import type { Student } from "../types/types";
 
 function AddStudentPage() {

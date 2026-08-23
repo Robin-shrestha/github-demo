@@ -6,8 +6,6 @@ const errorSchema = z.object({
   details: z.array(z.object({ field: z.string(), message: z.string() })).optional(),
 });
 
-// Carries the per field messages the API sends with a 400 so a form can put
-// each one next to the input that caused it.
 export class ApiError extends Error {
   status: number;
   fields: Record<string, string>;
@@ -20,8 +18,7 @@ export class ApiError extends Error {
   }
 }
 
-// fetch only rejects on a network failure, so a 400 or 500 arrives here as a
-// perfectly normal response and has to be checked by hand.
+// fetch doesn't reject on a 4xx/5xx, so this has to be checked by hand.
 export async function failOnError(response: Response): Promise<void> {
   if (response.ok) {
     return;
@@ -44,15 +41,10 @@ export function resolveFileUrl(path: string): string {
   return path.startsWith("http") ? path : `${API_BASE_URL}${path}`;
 }
 
-// Attach to a fetch call's headers to send the JWT: { ...authHeader(token) }
 export function authHeader(token: string): Record<string, string> {
   return { Authorization: `Bearer ${token}` };
 }
 
-// Runs an authenticated call. If the access token expired (a 401), gets a
-// new one and retries once. `onRefreshed` is how the caller saves the new
-// token (e.g. dispatching it into Redux) since this function doesn't know
-// about the store.
 export async function withTokenRefresh<T>(
   call: (token: string) => Promise<T>,
   token: string,

@@ -2,10 +2,10 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 import multer from "multer";
 import type { Request, Response } from "express";
-import { createUser } from "../services/usersService.ts";
+import { createUser } from "./authService.ts";
 import { BadRequest } from "../types/httpError.ts";
 import { validate } from "../middleware/validate.ts";
-import { signupSchema } from "../validation/userSchemas.ts";
+import { signupSchema, type SignupInput } from "./authSchemas.ts";
 
 const storage = multer.diskStorage({
   destination: "uploads/",

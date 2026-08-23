@@ -35,6 +35,7 @@ function useStudents(): UseStudentsResult {
     };
   }, []);
 
+  // not caught here, so withTokenRefresh can see a 401 and retry
   const removeStudent = useCallback(async (id: string, token: string): Promise<void> => {
     await deleteStudent(id, token);
     setState((prev) => {

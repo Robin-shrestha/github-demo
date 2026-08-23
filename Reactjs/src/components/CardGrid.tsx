@@ -4,8 +4,8 @@ import { Alert, Box, Button, CircularProgress, Typography } from "@mui/material"
 import StudentCard from "./StudentCard";
 import useStudents from "../hooks/useStudents";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { setToken } from "../store/authSlice";
-import { refreshAccessToken } from "../api/users";
+import { setToken } from "../auth/authSlice";
+import { refreshAccessToken } from "../auth/authApi";
 import { withTokenRefresh } from "../api/httpClient";
 import type { Student } from "../types/types";
 

@@ -4,8 +4,9 @@ import { Box, CircularProgress, Container } from "@mui/material";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useAppDispatch } from "../store/hooks";
-import { getCurrentUser, refreshAccessToken } from "../api/users";
-import { setCredentials } from "../store/authSlice";
+import { getCurrentUser } from "../api/users";
+import { refreshAccessToken } from "../auth/authApi";
+import { setCredentials } from "../auth/authSlice";
 
 function Layout() {
   const dispatch = useAppDispatch();
@@ -18,9 +19,7 @@ function Layout() {
         const user = await getCurrentUser(token);
         if (!cancelled) dispatch(setCredentials({ token, user }));
       })
-      .catch(() => {
-        // no valid refresh cookie, stay signed out
-      });
+      .catch(() => {});
 
     return () => {
       cancelled = true;

@@ -14,10 +14,6 @@ export function signAccessToken(userId: string): string {
   });
 }
 
-// tokenVersion is copied from the user at sign time, then compared against
-// the user's current value on every refresh. Bumping the stored value (on
-// logout or a password change) makes every refresh token signed before that
-// moment stop working.
 export function signRefreshToken(userId: string, tokenVersion: number): string {
   return jwt.sign({ id: userId, type: "refresh", tokenVersion }, envConstants.JWT_SECRET, {
     expiresIn: REFRESH_TOKEN_EXPIRES_IN,

@@ -8,7 +8,7 @@ import {
   putStudent,
 } from "../controllers/studentsController.ts";
 import { uploadStudentPhotoLocal } from "../controllers/studentPhotoLocal.ts";
-import { authenticate } from "../middleware/authenticate.ts";
+import { authenticate } from "../auth/authenticate.ts";
 import { validate } from "../middleware/validate.ts";
 import {
   createStudentSchema,

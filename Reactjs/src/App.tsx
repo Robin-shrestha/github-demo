@@ -6,11 +6,11 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Layout from "./routes/Layout";
-import ProtectedRoute from "./routes/ProtectedRoute";
+import ProtectedRoute from "./auth/ProtectedRoute";
 import StudentProfilePage from "./routes/StudentProfilePage";
 import AddStudentPage from "./routes/AddStudentPage";
-import LoginPage from "./routes/LoginPage";
-import Signup from "./routes/Auth/Signup";
+import LoginPage from "./auth/LoginPage";
+import SignupPage from "./auth/SignupPage";
 import NotFoundPage from "./routes/NotFoundPage";
 import RouteError from "./routes/RouteError";
 import DocsListPage from "./routes/DocsListPage";
@@ -32,7 +32,7 @@ const router = createBrowserRouter(
       <Route errorElement={<RouteError />}>
         <Route index element={<CardGrid />} />
         <Route path="login" element={<LoginPage />} />
-        <Route path="signup" element={<Signup />} />
+        <Route path="signup" element={<SignupPage />} />
         <Route path="docs" element={<DocsListPage />} />
         <Route path="docs/:slug" element={<DocPage />} />
         <Route path="students/:id" element={<StudentProfilePage />} />
