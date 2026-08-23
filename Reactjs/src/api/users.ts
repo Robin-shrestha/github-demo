@@ -73,6 +73,7 @@ const loginApiSchema = z.object({ token: z.string() });
 export async function loginUser(credentials: LoginCredentials): Promise<string> {
   const response = await fetch(`${USERS_ENDPOINT}/login`, {
     method: "POST",
+    credentials: "include", // lets the browser store the refresh token cookie
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(credentials),
   });
@@ -86,6 +87,36 @@ export async function loginUser(credentials: LoginCredentials): Promise<string> 
   }
 
   return parsed.data.token;
+}
+
+// Exchanges the refresh token cookie (sent automatically) for a new access
+// token. Used on page load, and again mid-session if a request comes back
+// 401 because the access token expired.
+export async function refreshAccessToken(): Promise<string> {
+  const response = await fetch(`${USERS_ENDPOINT}/refresh`, {
+    method: "POST",
+    credentials: "include",
+  });
+
+  await failOnError(response);
+
+  const parsed = loginApiSchema.safeParse(await response.json());
+
+  if (!parsed.success) {
+    throw new Error("Unexpected response shape from POST /users/refresh");
+  }
+
+  return parsed.data.token;
+}
+
+export async function logoutUser(token: string): Promise<void> {
+  const response = await fetch(`${USERS_ENDPOINT}/logout`, {
+    method: "POST",
+    credentials: "include",
+    headers: authHeader(token),
+  });
+
+  await failOnError(response);
 }
 
 export async function getCurrentUser(token: string): Promise<User> {

@@ -5,6 +5,13 @@ import { UserModel } from "../models/index.ts";
 import { NotFound, Unauthorized } from "../types/httpError.ts";
 import { envConstants } from "../constants/env.ts";
 import type { LoginInput } from "../validation/userSchemas.ts";
+import {
+  clearRefreshTokenCookie,
+  REFRESH_TOKEN_COOKIE,
+  setRefreshTokenCookie,
+  signAccessToken,
+  signRefreshToken,
+} from "../utils/tokens.ts";
 
 export async function loginUser(req: Request, res: Response): Promise<void> {
   const { username, password } = req.body as LoginInput;
@@ -15,13 +22,8 @@ export async function loginUser(req: Request, res: Response): Promise<void> {
     throw new Unauthorized("Invalid credentials");
   }
 
-  const token = jwt.sign(
-    { id: user.id, name: `${user.firstName} ${user.lastName}`, email: user.email },
-    envConstants.JWT_SECRET,
-    { expiresIn: "1h" }
-  );
-
-  res.json({ token });
+  setRefreshTokenCookie(res, signRefreshToken(user.id, user.tokenVersion));
+  res.json({ token: signAccessToken(user.id) });
 }
 
 export async function getCurrentUser(req: Request, res: Response): Promise<void> {
@@ -32,4 +34,42 @@ export async function getCurrentUser(req: Request, res: Response): Promise<void>
   }
 
   res.json(user);
+}
+
+export async function refreshAccessToken(req: Request, res: Response): Promise<void> {
+  const token = req.cookies?.[REFRESH_TOKEN_COOKIE];
+
+  if (!token) {
+    throw new Unauthorized("Missing refresh token");
+  }
+
+  const payload = jwt.verify(token, envConstants.JWT_SECRET) as {
+    id: string;
+    type: string;
+    tokenVersion: number;
+  };
+
+  if (payload.type !== "refresh") {
+    throw new Unauthorized("Invalid refresh token");
+  }
+
+  const user = await UserModel.findById(payload.id);
+
+  if (!user || user.tokenVersion !== payload.tokenVersion) {
+    throw new Unauthorized("Session expired, please log in again");
+  }
+
+  res.json({ token: signAccessToken(user.id) });
+}
+
+export async function logoutUser(req: Request, res: Response): Promise<void> {
+  const user = await UserModel.findById(req.user?.id);
+
+  if (user) {
+    user.tokenVersion += 1;
+    await user.save();
+  }
+
+  clearRefreshTokenCookie(res);
+  res.status(204).send();
 }

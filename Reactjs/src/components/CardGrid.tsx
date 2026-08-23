@@ -3,7 +3,10 @@ import { Link } from "react-router-dom";
 import { Alert, Box, Button, CircularProgress, Typography } from "@mui/material";
 import StudentCard from "./StudentCard";
 import useStudents from "../hooks/useStudents";
-import { useAppSelector } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { setToken } from "../store/authSlice";
+import { refreshAccessToken } from "../api/users";
+import { withTokenRefresh } from "../api/httpClient";
 import type { Student } from "../types/types";
 
 // Simulated expensive computation — busy-waits ~400ms so the useMemo demo
@@ -19,6 +22,7 @@ function expensiveSort(students: Student[]): Student[] {
 function CardGrid() {
   const { state, removeStudent } = useStudents();
   const token = useAppSelector((s) => s.auth.token);
+  const dispatch = useAppDispatch();
   const [renderCount, setRenderCount] = useState(0);
 
   const sortedStudents = useMemo(() => {
@@ -53,7 +57,17 @@ function CardGrid() {
             <StudentCard
               key={student.id}
               {...student}
-              onDelete={token ? (id) => removeStudent(id, token) : undefined}
+              onDelete={
+                token
+                  ? (id) =>
+                      withTokenRefresh(
+                        (t) => removeStudent(id, t),
+                        token,
+                        refreshAccessToken,
+                        (newToken) => dispatch(setToken(newToken))
+                      ).catch((err: unknown) => console.error("Failed to delete student", err))
+                  : undefined
+              }
             />
           );
         })}

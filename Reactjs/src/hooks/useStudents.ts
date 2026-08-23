@@ -36,15 +36,11 @@ function useStudents(): UseStudentsResult {
   }, []);
 
   const removeStudent = useCallback(async (id: string, token: string): Promise<void> => {
-    try {
-      await deleteStudent(id, token);
-      setState((prev) => {
-        if (prev.status !== "success") return prev;
-        return { status: "success", students: prev.students.filter((s) => s.id !== id) };
-      });
-    } catch (err: unknown) {
-      console.error("Failed to delete student", err);
-    }
+    await deleteStudent(id, token);
+    setState((prev) => {
+      if (prev.status !== "success") return prev;
+      return { status: "success", students: prev.students.filter((s) => s.id !== id) };
+    });
   }, []);
 
   return { state, removeStudent };

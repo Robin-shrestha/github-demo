@@ -48,3 +48,27 @@ export function resolveFileUrl(path: string): string {
 export function authHeader(token: string): Record<string, string> {
   return { Authorization: `Bearer ${token}` };
 }
+
+// Runs an authenticated call. If the access token expired (a 401), gets a
+// new one and retries once. `onRefreshed` is how the caller saves the new
+// token (e.g. dispatching it into Redux) since this function doesn't know
+// about the store.
+export async function withTokenRefresh<T>(
+  call: (token: string) => Promise<T>,
+  token: string,
+  refresh: () => Promise<string>,
+  onRefreshed: (newToken: string) => void
+): Promise<T> {
+  try {
+    return await call(token);
+  } catch (err: unknown) {
+    if (!(err instanceof ApiError) || err.status !== 401) {
+      throw err;
+    }
+
+    const newToken = await refresh();
+    onRefreshed(newToken);
+
+    return call(newToken);
+  }
+}

@@ -1,4 +1,5 @@
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import express from "express";
 import { envConstants } from "./constants/env.ts";
 import { connectWithMongoose } from "./config/mongoose.ts";
@@ -14,6 +15,7 @@ const { PORT } = envConstants;
 
 // app.use(simpleCors);
 app.use(extendedCors);
+app.use(cookieParser());
 
 app.use(requestLogger);
 app.use(express.json());

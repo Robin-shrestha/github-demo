@@ -8,6 +8,7 @@ const userSchema = new Schema(
     username: { type: String, required: true, unique: true, trim: true },
     email: { type: String, required: true, unique: true, trim: true, lowercase: true },
     password: { type: String, required: true, select: false },
+    tokenVersion: { type: Number, default: 0 },
     dateOfBirth: { type: Date, required: true },
     address: { type: String, required: true, trim: true },
     profilePic: { type: String, required: true },
