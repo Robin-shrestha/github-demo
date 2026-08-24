@@ -18,7 +18,7 @@ export async function loginUser(req: Request, res: Response): Promise<void> {
 
   const user = await UserModel.findOne({ username }).select("+password");
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
+  if (!user || !user.password || !(await bcrypt.compare(password, user.password))) {
     throw new Unauthorized("Invalid credentials");
   }
 

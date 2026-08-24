@@ -18,4 +18,5 @@ export const envConstants = {
   PORT: Number(process.env.PORT ?? 3001),
   CLIENT_ORIGIN: required("CLIENT_ORIGIN"),
   JWT_SECRET: required("JWT_SECRET"),
+  GOOGLE_CLIENT_ID: required("GOOGLE_CLIENT_ID"),
 };

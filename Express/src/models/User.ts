@@ -7,12 +7,13 @@ const userSchema = new Schema(
     lastName: { type: String, required: true, trim: true },
     username: { type: String, required: true, unique: true, trim: true },
     email: { type: String, required: true, unique: true, trim: true, lowercase: true },
-    password: { type: String, required: true, select: false },
+    password: { type: String, select: false },
     tokenVersion: { type: Number, default: 0 },
-    dateOfBirth: { type: Date, required: true },
-    address: { type: String, required: true, trim: true },
-    profilePic: { type: String, required: true },
+    dateOfBirth: { type: Date },
+    address: { type: String, trim: true },
+    profilePic: { type: String },
     idDocuments: { type: [String], default: undefined },
+    googleId: { type: String },
   },
   { timestamps: true, toJSON: toJSONOptions }
 );

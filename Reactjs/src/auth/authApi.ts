@@ -60,6 +60,26 @@ export async function loginUser(credentials: LoginCredentials): Promise<string> 
   return parsed.data.token;
 }
 
+export async function googleLogin(credential: string): Promise<string> {
+  const response = await fetch(`${AUTH_ENDPOINT}/google`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ credential }),
+  });
+
+  await failOnError(response);
+
+  const parsed = loginApiSchema.safeParse(await response.json());
+  console.log("🚀 ~ googleLogin ~ parsed:", parsed);
+
+  if (!parsed.success) {
+    throw new Error("Unexpected response shape from POST /auth/google");
+  }
+
+  return parsed.data.token;
+}
+
 export async function refreshAccessToken(): Promise<string> {
   const response = await fetch(`${AUTH_ENDPOINT}/refresh`, {
     method: "POST",

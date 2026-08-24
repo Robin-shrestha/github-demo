@@ -6,5 +6,6 @@ declare namespace NodeJS {
     readonly PORT?: string;
     readonly CLIENT_ORIGIN?: string;
     readonly JWT_SECRET?: string;
+    readonly GOOGLE_CLIENT_ID?: string;
   }
 }

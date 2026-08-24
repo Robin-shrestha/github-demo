@@ -17,8 +17,8 @@ export interface User {
   lastName: string;
   username: string;
   email: string;
-  dateOfBirth: string;
-  address: string;
+  dateOfBirth?: string;
+  address?: string;
   profilePic: string;
   idDocuments?: string[];
 }
