@@ -1,8 +1,8 @@
-import { MarkModel, StudentModel, type Role } from "../models/index.ts";
+import { MarkModel, StudentModel, type StudentRole } from "../models/index.ts";
 import type { CreateStudentInput, PatchStudentInput } from "../validation/studentSchemas.ts";
 
 interface ListOptions {
-  role?: Role;
+  role?: StudentRole;
   page: number;
   limit: number;
 }

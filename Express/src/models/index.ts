@@ -6,3 +6,4 @@ export * from "./Mark.ts";
 export * from "./Student.ts";
 export * from "./Teacher.ts";
 export * from "./User.ts";
+export * from "./Role.ts";

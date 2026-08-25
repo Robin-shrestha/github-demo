@@ -17,7 +17,7 @@ const studentSchema = new Schema(
   { timestamps: true, toJSON: toJSONOptions }
 );
 
-export type Role = (typeof ROLES)[number];
+export type StudentRole = (typeof ROLES)[number];
 
 export type Student = InferSchemaType<typeof studentSchema>;
 

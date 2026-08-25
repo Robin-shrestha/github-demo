@@ -13,6 +13,7 @@ const userSchema = new Schema(
     address: { type: String, required: true, trim: true },
     profilePic: { type: String, required: true },
     idDocuments: { type: [String], default: undefined },
+    role: [{ type: Schema.Types.ObjectId, ref: "Role" }],
   },
   { timestamps: true, toJSON: toJSONOptions }
 );

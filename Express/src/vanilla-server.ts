@@ -7,7 +7,7 @@ import {
   listStudents,
   updateStudent,
 } from "./data/studentsData.ts";
-import { ROLES, type Role, type StudentInput } from "./models/Student.ts";
+import { ROLES, type StudentRole, type StudentInput } from "./models/Student.ts";
 
 const PORT = 3001;
 
@@ -42,10 +42,10 @@ function validateStudent(body: unknown): StudentInput | null {
   if (typeof body !== "object" || body === null) return null;
   const { name, role, email, avatar } = body as Record<string, unknown>;
   if (typeof name !== "string" || name.trim() === "") return null;
-  if (typeof role !== "string" || !ROLES.includes(role as Role)) return null;
+  if (typeof role !== "string" || !ROLES.includes(role as StudentRole)) return null;
   if (typeof email !== "string" || !email.includes("@")) return null;
   if (typeof avatar !== "string" || avatar.trim() === "") return null;
-  return { name, role: role as Role, email, avatar };
+  return { name, role: role as StudentRole, email, avatar };
 }
 
 const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
