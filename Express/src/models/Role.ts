@@ -1,4 +1,4 @@
-import { InferSchemaType, model, Schema } from "mongoose";
+import { model, Schema, type InferSchemaType } from "mongoose";
 import { toJSONOptions } from "./schemaOptions.ts";
 
 export const roleSchema = new Schema(

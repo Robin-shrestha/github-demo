@@ -8,8 +8,8 @@ const REFRESH_TOKEN_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
 export const REFRESH_TOKEN_COOKIE = "refreshToken";
 
-export function signAccessToken(userId: string): string {
-  return jwt.sign({ id: userId, type: "access" }, envConstants.JWT_SECRET, {
+export function signAccessToken(userId: string, name: string, role: string[]): string {
+  return jwt.sign({ id: userId, name, role, type: "access" }, envConstants.JWT_SECRET, {
     expiresIn: ACCESS_TOKEN_EXPIRES_IN,
   });
 }

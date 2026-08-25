@@ -3,7 +3,7 @@
 // from here rather than one by one runs all four.
 export * from "./Course.ts";
 export * from "./Mark.ts";
+export * from "./Role.ts";
 export * from "./Student.ts";
 export * from "./Teacher.ts";
 export * from "./User.ts";
-export * from "./Role.ts";

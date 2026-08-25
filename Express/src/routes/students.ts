@@ -9,6 +9,7 @@ import {
 } from "../controllers/studentsController.ts";
 import { uploadStudentPhotoLocal } from "../controllers/studentPhotoLocal.ts";
 import { authenticate } from "../auth/authenticate.ts";
+import { authorizeRoles, authorizeWithPermission } from "../auth/authorize.ts";
 import { validate } from "../middleware/validate.ts";
 import {
   createStudentSchema,
@@ -23,14 +24,39 @@ router.get("/", validate({ query: listStudentsQuerySchema }), listStudents);
 
 router.get("/:id", validate({ params: studentIdSchema }), getStudent);
 
-router.post("/", authenticate, validate({ body: createStudentSchema }), postStudent);
+router.post(
+  "/",
+  authenticate,
+  // authorizeRoles("admin"),
+  authorizeWithPermission("student:create"),
+  validate({ body: createStudentSchema }),
+  postStudent
+);
 
 // PUT and PATCH differ only in what the body must contain.
-router.put("/:id", validate({ params: studentIdSchema, body: createStudentSchema }), putStudent);
+router.put(
+  "/:id",
+  authenticate,
+  authorizeRoles("admin"),
+  validate({ params: studentIdSchema, body: createStudentSchema }),
+  putStudent
+);
 
-router.patch("/:id", validate({ params: studentIdSchema, body: patchStudentSchema }), patchStudent);
+router.patch(
+  "/:id",
+  authenticate,
+  authorizeRoles("admin"),
+  validate({ params: studentIdSchema, body: patchStudentSchema }),
+  patchStudent
+);
 
-router.delete("/:id", authenticate, validate({ params: studentIdSchema }), deleteStudent);
+router.delete(
+  "/:id",
+  authenticate,
+  authorizeRoles("admin"),
+  validate({ params: studentIdSchema }),
+  deleteStudent
+);
 
 router.post("/:id/photo", validate({ params: studentIdSchema }), ...uploadStudentPhotoLocal);
 
