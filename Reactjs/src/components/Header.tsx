@@ -33,6 +33,7 @@ function Header() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const canReadUsers = user?.permissions.includes("user:read") ?? false;
 
   async function handleLogout(): Promise<void> {
     if (token) {
@@ -59,6 +60,12 @@ function Header() {
           <Button component={Link} to="/">
             Students
           </Button>
+
+          {canReadUsers && (
+            <Button component={Link} to="/users">
+              Users
+            </Button>
+          )}
 
           <Button
             id="more-menu-button"

@@ -9,7 +9,7 @@ import {
 } from "../controllers/studentsController.ts";
 import { uploadStudentPhotoLocal } from "../controllers/studentPhotoLocal.ts";
 import { authenticate } from "../auth/authenticate.ts";
-import { authorizeRoles, authorizeWithPermission } from "../auth/authorize.ts";
+import { requirePermission } from "../auth/authorize.ts";
 import { validate } from "../middleware/validate.ts";
 import {
   createStudentSchema,
@@ -20,15 +20,26 @@ import {
 
 const router = Router();
 
-router.get("/", validate({ query: listStudentsQuerySchema }), listStudents);
+router.get(
+  "/",
+  authenticate,
+  requirePermission("student:read"),
+  validate({ query: listStudentsQuerySchema }),
+  listStudents
+);
 
-router.get("/:id", validate({ params: studentIdSchema }), getStudent);
+router.get(
+  "/:id",
+  authenticate,
+  requirePermission("student:read"),
+  validate({ params: studentIdSchema }),
+  getStudent
+);
 
 router.post(
   "/",
   authenticate,
-  // authorizeRoles("admin"),
-  authorizeWithPermission("student:create"),
+  requirePermission("student:create"),
   validate({ body: createStudentSchema }),
   postStudent
 );
@@ -37,7 +48,7 @@ router.post(
 router.put(
   "/:id",
   authenticate,
-  authorizeRoles("admin"),
+  requirePermission("student:update"),
   validate({ params: studentIdSchema, body: createStudentSchema }),
   putStudent
 );
@@ -45,7 +56,7 @@ router.put(
 router.patch(
   "/:id",
   authenticate,
-  authorizeRoles("admin"),
+  requirePermission("student:update"),
   validate({ params: studentIdSchema, body: patchStudentSchema }),
   patchStudent
 );
@@ -53,11 +64,17 @@ router.patch(
 router.delete(
   "/:id",
   authenticate,
-  authorizeRoles("admin"),
+  requirePermission("student:delete"),
   validate({ params: studentIdSchema }),
   deleteStudent
 );
 
-router.post("/:id/photo", validate({ params: studentIdSchema }), ...uploadStudentPhotoLocal);
+router.post(
+  "/:id/photo",
+  authenticate,
+  requirePermission("student:update"),
+  validate({ params: studentIdSchema }),
+  ...uploadStudentPhotoLocal
+);
 
 export default router;

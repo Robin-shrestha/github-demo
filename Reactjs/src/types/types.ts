@@ -21,4 +21,6 @@ export interface User {
   address: string;
   profilePic: string;
   idDocuments?: string[];
+  roles: string[];
+  permissions: string[];
 }

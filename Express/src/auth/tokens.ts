@@ -8,10 +8,17 @@ const REFRESH_TOKEN_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
 export const REFRESH_TOKEN_COOKIE = "refreshToken";
 
-export function signAccessToken(userId: string, name: string, role: string[]): string {
-  return jwt.sign({ id: userId, name, role, type: "access" }, envConstants.JWT_SECRET, {
-    expiresIn: ACCESS_TOKEN_EXPIRES_IN,
-  });
+export interface AccessTokenClaims {
+  roles: string[];
+  permissions: string[];
+}
+
+export function signAccessToken(userId: string, claims: AccessTokenClaims): string {
+  return jwt.sign(
+    { id: userId, type: "access", roles: claims.roles, permissions: claims.permissions },
+    envConstants.JWT_SECRET,
+    { expiresIn: ACCESS_TOKEN_EXPIRES_IN }
+  );
 }
 
 export function signRefreshToken(userId: string, tokenVersion: number): string {

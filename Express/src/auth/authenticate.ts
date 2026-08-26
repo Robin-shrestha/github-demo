@@ -11,12 +11,17 @@ export function authenticate(req: Request, _res: Response, next: NextFunction): 
   }
 
   const token = header.slice("Bearer ".length);
-  const payload = jwt.verify(token, envConstants.JWT_SECRET) as { id: string; type?: string };
+  const payload = jwt.verify(token, envConstants.JWT_SECRET) as {
+    id: string;
+    type?: string;
+    roles?: string[];
+    permissions?: string[];
+  };
 
   if (payload.type !== "access") {
     throw new Unauthorized("Invalid access token");
   }
 
-  req.user = { id: payload.id };
+  req.user = { id: payload.id, roles: payload.roles ?? [], permissions: payload.permissions ?? [] };
   next();
 }

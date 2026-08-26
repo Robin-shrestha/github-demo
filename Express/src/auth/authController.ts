@@ -1,9 +1,11 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { Role, UserModel } from "../models/index.ts";
+import { UserModel } from "../models/index.ts";
+import type { Role } from "../models/Role.ts";
 import { Unauthorized } from "../types/httpError.ts";
 import { envConstants } from "../constants/env.ts";
+import { resolveClaims } from "./authService.ts";
 import type { LoginInput } from "./authSchemas.ts";
 import {
   clearRefreshTokenCookie,
@@ -12,19 +14,20 @@ import {
   signAccessToken,
   signRefreshToken,
 } from "./tokens.ts";
-import { userDataById, userDataByUsername } from "./authService.ts";
 
 export async function loginUser(req: Request, res: Response): Promise<void> {
   const { username, password } = req.body as LoginInput;
 
-  const user = await userDataByUsername(username);
+  const user = await UserModel.findOne({ username })
+    .select("+password")
+    .populate<{ role: Role[] }>("role");
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
     throw new Unauthorized("Invalid credentials");
   }
 
   setRefreshTokenCookie(res, signRefreshToken(user.id, user.tokenVersion));
-  res.json({ token: signAccessToken(user.id, user.username, user.role ?? []) });
+  res.json({ token: signAccessToken(user.id, resolveClaims(user.role)) });
 }
 
 export async function refreshAccessToken(req: Request, res: Response): Promise<void> {
@@ -44,13 +47,13 @@ export async function refreshAccessToken(req: Request, res: Response): Promise<v
     throw new Unauthorized("Invalid refresh token");
   }
 
-  const user = await userDataById(payload.id);
+  const user = await UserModel.findById(payload.id).populate<{ role: Role[] }>("role");
 
   if (!user || user.tokenVersion !== payload.tokenVersion) {
     throw new Unauthorized("Session expired, please log in again");
   }
 
-  res.json({ token: signAccessToken(user.id, user.username, user.role ?? []) });
+  res.json({ token: signAccessToken(user.id, resolveClaims(user.role)) });
 }
 
 export async function logoutUser(req: Request, res: Response): Promise<void> {

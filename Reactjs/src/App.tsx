@@ -11,7 +11,9 @@ import StudentProfilePage from "./routes/StudentProfilePage";
 import AddStudentPage from "./routes/AddStudentPage";
 import LoginPage from "./auth/LoginPage";
 import SignupPage from "./auth/SignupPage";
+import UsersListPage from "./routes/UsersListPage";
 import NotFoundPage from "./routes/NotFoundPage";
+import ForbiddenPage from "./routes/ForbiddenPage";
 import RouteError from "./routes/RouteError";
 import DocsListPage from "./routes/DocsListPage";
 import DocPage from "./routes/DocPage";
@@ -30,14 +32,20 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Layout />}>
       <Route errorElement={<RouteError />}>
-        <Route index element={<CardGrid />} />
+        <Route element={<ProtectedRoute permission="student:read" />}>
+          <Route index element={<CardGrid />} />
+          <Route path="students/:id" element={<StudentProfilePage />} />
+        </Route>
         <Route path="login" element={<LoginPage />} />
         <Route path="signup" element={<SignupPage />} />
+        <Route path="forbidden" element={<ForbiddenPage />} />
         <Route path="docs" element={<DocsListPage />} />
         <Route path="docs/:slug" element={<DocPage />} />
-        <Route path="students/:id" element={<StudentProfilePage />} />
-        <Route element={<ProtectedRoute />}>
+        <Route element={<ProtectedRoute permission="student:create" />}>
           <Route path="students/new" element={<AddStudentPage />} />
+        </Route>
+        <Route element={<ProtectedRoute permission="user:read" />}>
+          <Route path="users" element={<UsersListPage />} />
         </Route>
         <Route path="context-demo" element={<ContextDemoLayout />}>
           <Route errorElement={<RouteError />}>

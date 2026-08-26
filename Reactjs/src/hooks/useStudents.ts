@@ -12,15 +12,17 @@ export interface UseStudentsResult {
   removeStudent: (id: string, token: string) => Promise<void>;
 }
 
-function useStudents(): UseStudentsResult {
+function useStudents(token: string | null): UseStudentsResult {
   const [state, setState] = useState<StudentsState>({ status: "loading" });
 
   useEffect(() => {
+    if (!token) return;
+
     let cancelled = false;
 
     (async () => {
       try {
-        const students = await getStudents();
+        const students = await getStudents(token);
         if (cancelled) return;
         setState({ status: "success", students });
       } catch (err: unknown) {
@@ -33,7 +35,7 @@ function useStudents(): UseStudentsResult {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [token]);
 
   // not caught here, so withTokenRefresh can see a 401 and retry
   const removeStudent = useCallback(async (id: string, token: string): Promise<void> => {

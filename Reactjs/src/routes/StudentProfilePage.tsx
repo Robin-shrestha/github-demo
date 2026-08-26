@@ -16,11 +16,15 @@ import {
 } from "@mui/material";
 import useStudent from "../hooks/useStudent";
 import useUploadStudentPhoto from "../hooks/useUploadStudentPhoto";
+import { useAppSelector } from "../store/hooks";
 
 function StudentProfilePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const state = useStudent(id);
+  const token = useAppSelector((s) => s.auth.token);
+  const permissions = useAppSelector((s) => s.auth.user?.permissions ?? []);
+  const canUpdate = permissions.includes("student:update");
+  const state = useStudent(id, token);
   const { state: uploadState, upload } = useUploadStudentPhoto();
 
   const avatarRef = useRef<HTMLDivElement>(null);
@@ -121,19 +125,19 @@ function StudentProfilePage() {
             onChange={(event) => setSelectedFile(event.target.files?.[0] ?? null)}
           />
 
-          {!selectedFile && (
+          {canUpdate && !selectedFile && (
             <Button size="small" onClick={() => fileInputRef.current?.click()}>
               Change photo
             </Button>
           )}
 
-          {selectedFile && (
+          {canUpdate && selectedFile && (
             <Stack direction="row" spacing={1}>
               <Button
                 size="small"
                 variant="contained"
                 disabled={uploadState.status === "uploading"}
-                onClick={() => id && upload(id, selectedFile)}
+                onClick={() => id && token && upload(id, selectedFile, token)}
               >
                 Submit
               </Button>

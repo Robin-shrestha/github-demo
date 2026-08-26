@@ -20,10 +20,14 @@ function expensiveSort(students: Student[]): Student[] {
 }
 
 function CardGrid() {
-  const { state, removeStudent } = useStudents();
   const token = useAppSelector((s) => s.auth.token);
+  const permissions = useAppSelector((s) => s.auth.user?.permissions ?? []);
+  const { state, removeStudent } = useStudents(token);
   const dispatch = useAppDispatch();
   const [renderCount, setRenderCount] = useState(0);
+
+  const canCreate = permissions.includes("student:create");
+  const canDelete = permissions.includes("student:delete");
 
   const sortedStudents = useMemo(() => {
     if (state.status !== "success") return [];
@@ -47,9 +51,11 @@ function CardGrid() {
 
   return (
     <Box>
-      <Button component={Link} to="/students/new" variant="contained" sx={{ mb: 3 }}>
-        Add Student
-      </Button>
+      {canCreate && (
+        <Button component={Link} to="/students/new" variant="contained" sx={{ mb: 3 }}>
+          Add Student
+        </Button>
+      )}
 
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, mb: 3 }}>
         {sortedStudents.map((student) => {
@@ -58,7 +64,7 @@ function CardGrid() {
               key={student.id}
               {...student}
               onDelete={
-                token
+                canDelete && token
                   ? (id) =>
                       withTokenRefresh(
                         (t) => removeStudent(id, t),

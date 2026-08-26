@@ -29,8 +29,8 @@ function toStudent(raw: RawStudent): Student {
   };
 }
 
-export async function getStudents(): Promise<Student[]> {
-  const response = await fetch(STUDENTS_ENDPOINT);
+export async function getStudents(token: string): Promise<Student[]> {
+  const response = await fetch(STUDENTS_ENDPOINT, { headers: authHeader(token) });
   await failOnError(response);
 
   const parsed = z.array(studentApiSchema).safeParse(await response.json());
@@ -42,8 +42,8 @@ export async function getStudents(): Promise<Student[]> {
   return parsed.data.map(toStudent);
 }
 
-export async function getStudentById(id: string): Promise<Student | null> {
-  const response = await fetch(`${STUDENTS_ENDPOINT}/${id}`);
+export async function getStudentById(id: string, token: string): Promise<Student | null> {
+  const response = await fetch(`${STUDENTS_ENDPOINT}/${id}`, { headers: authHeader(token) });
 
   if (response.status === 404) {
     return null;
@@ -83,11 +83,12 @@ export async function addStudent(
 
 export async function patchStudent(
   id: string,
-  changes: Partial<Omit<Student, "id">>
+  changes: Partial<Omit<Student, "id">>,
+  token: string
 ): Promise<Student> {
   const response = await fetch(`${STUDENTS_ENDPOINT}/${id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeader(token) },
     body: JSON.stringify(changes),
   });
 
@@ -112,7 +113,7 @@ export async function deleteStudent(id: string, token: string): Promise<void> {
   await failOnError(response);
 }
 
-export async function uploadStudentPhoto(id: string, file: File): Promise<Student> {
+export async function uploadStudentPhoto(id: string, file: File, token: string): Promise<Student> {
   const formData = new FormData();
   formData.append("photo", file);
 
@@ -120,6 +121,7 @@ export async function uploadStudentPhoto(id: string, file: File): Promise<Studen
   // the correct boundary itself; setting it by hand breaks the request.
   const response = await fetch(`${STUDENTS_ENDPOINT}/${id}/photo`, {
     method: "POST",
+    headers: authHeader(token),
     body: formData,
   });
 

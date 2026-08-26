@@ -8,7 +8,7 @@ export type StudentState =
   | { status: "error"; error: string }
   | { status: "success"; student: Student };
 
-function useStudent(id: string | undefined): StudentState {
+function useStudent(id: string | undefined, token: string | null): StudentState {
   const [state, setState] = useState<StudentState>({ status: "loading" });
 
   useEffect(() => {
@@ -17,12 +17,16 @@ function useStudent(id: string | undefined): StudentState {
       return;
     }
 
+    if (!token) {
+      return;
+    }
+
     let cancelled = false;
     setState({ status: "loading" });
 
     (async () => {
       try {
-        const student = await getStudentById(id);
+        const student = await getStudentById(id, token);
         if (cancelled) return;
         if (!student) {
           setState({ status: "not-found" });
@@ -39,7 +43,7 @@ function useStudent(id: string | undefined): StudentState {
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, token]);
 
   return state;
 }

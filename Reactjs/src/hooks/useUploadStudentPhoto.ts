@@ -10,17 +10,17 @@ export type UploadState =
 
 export interface UseUploadStudentPhotoResult {
   state: UploadState;
-  upload: (id: string, file: File) => Promise<void>;
+  upload: (id: string, file: File, token: string) => Promise<void>;
 }
 
 function useUploadStudentPhoto(): UseUploadStudentPhotoResult {
   const [state, setState] = useState<UploadState>({ status: "idle" });
 
-  const upload = useCallback(async (id: string, file: File) => {
+  const upload = useCallback(async (id: string, file: File, token: string) => {
     setState({ status: "uploading" });
 
     try {
-      const student = await uploadStudentPhoto(id, file);
+      const student = await uploadStudentPhoto(id, file, token);
       setState({ status: "success", student });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Unknown error";
