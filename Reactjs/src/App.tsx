@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Layout from "./routes/Layout";
 import ProtectedRoute from "./auth/ProtectedRoute";
+import AuthInit from "./auth/AuthInit";
 import StudentProfilePage from "./routes/StudentProfilePage";
 import AddStudentPage from "./routes/AddStudentPage";
 import LoginPage from "./auth/LoginPage";
@@ -65,7 +66,11 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <AuthInit>
+      <RouterProvider router={router} />
+    </AuthInit>
+  );
 }
 
 export default App;

@@ -7,7 +7,7 @@ import {
   postStudent,
   putStudent,
 } from "../controllers/studentsController.ts";
-import { uploadStudentPhotoLocal } from "../controllers/studentPhotoLocal.ts";
+import { uploadStudentPhoto } from "../controllers/studentPhoto.ts";
 import { authenticate } from "../auth/authenticate.ts";
 import { requirePermission } from "../auth/authorize.ts";
 import { validate } from "../middleware/validate.ts";
@@ -74,7 +74,7 @@ router.post(
   authenticate,
   requirePermission("student:update"),
   validate({ params: studentIdSchema }),
-  ...uploadStudentPhotoLocal
+  ...uploadStudentPhoto
 );
 
 export default router;

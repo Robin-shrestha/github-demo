@@ -25,9 +25,10 @@ export async function signupUser(values: SignupFormValues): Promise<User> {
 
   await failOnError(response);
 
-  const parsed = userApiSchema.safeParse(await response.json());
+  const parsed = userApiSchema.omit({ role: true }).safeParse(await response.json());
 
   if (!parsed.success) {
+    console.error(parsed.error.issues);
     throw new Error("Unexpected response shape from POST /auth/signup");
   }
 

@@ -1,21 +1,14 @@
-import path from "node:path";
-import { randomUUID } from "node:crypto";
 import multer from "multer";
 import type { Request, Response } from "express";
 import { createUser } from "./authService.ts";
 import { BadRequest } from "../types/httpError.ts";
 import { validate } from "../middleware/validate.ts";
 import { signupSchema } from "./authSchemas.ts";
+import { uploadToCloudinary } from "../config/cloudinary.ts";
 
-const storage = multer.diskStorage({
-  destination: "uploads/",
-  filename(_req, file, cb) {
-    cb(null, `${randomUUID()}${path.extname(file.originalname)}`);
-  },
-});
-
+// Store all files in memory so we can stream them to Cloudinary.
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   fileFilter(_req, file, cb) {
     if (file.fieldname === "profilePic") {
       cb(null, file.mimetype.startsWith("image/"));
@@ -35,16 +28,28 @@ async function handler(req: Request, res: Response): Promise<void> {
   const files = req.files as
     { profilePic?: Express.Multer.File[]; idDocuments?: Express.Multer.File[] } | undefined;
 
-  const profilePic = files?.profilePic?.[0];
+  const profilePicFile = files?.profilePic?.[0];
+  console.log("🚀 ~ handler ~ profilePicFile:", profilePicFile);
 
-  if (!profilePic) {
+  if (!profilePicFile) {
     throw new BadRequest("No profile picture uploaded, or the file was not an image");
   }
 
+  // Upload profile picture and all ID documents to Cloudinary in parallel.
+  const [profilePicResult, ...idDocResults] = await Promise.all([
+    uploadToCloudinary(profilePicFile.buffer, {
+      folder: "users/profile-pics",
+      resource_type: "image",
+    }),
+    ...(files?.idDocuments ?? []).map((file) =>
+      uploadToCloudinary(file.buffer, { folder: "users/id-documents", resource_type: "auto" })
+    ),
+  ]);
+
   const user = await createUser({
     ...req.body,
-    profilePic: `/uploads/${profilePic.filename}`,
-    idDocuments: files?.idDocuments?.map((file) => `/uploads/${file.filename}`),
+    profilePic: profilePicResult.secure_url,
+    idDocuments: idDocResults.map((r) => r.secure_url),
   });
 
   res.status(201).json(user);

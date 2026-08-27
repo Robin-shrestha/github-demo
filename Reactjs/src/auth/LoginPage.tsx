@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Alert, Button, CircularProgress, Stack, TextField, Typography } from "@mui/material";
 import { useAppDispatch } from "../store/hooks";
 import { setCredentials } from "./authSlice";
@@ -17,6 +17,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
 
   const {
@@ -34,7 +35,11 @@ function LoginPage() {
       const token = await loginUser(values);
       const user = await getCurrentUser(token);
       dispatch(setCredentials({ token, user }));
-      navigate("/");
+
+      // Go back to the page the user was trying to visit, or home if they
+      // navigated directly to /login.
+      const from = (location.state as { from?: Location } | null)?.from?.pathname ?? "/";
+      navigate(from, { replace: true });
     } catch {
       setError("root", { message: "Invalid username or password." });
     }

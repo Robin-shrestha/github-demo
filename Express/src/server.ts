@@ -1,6 +1,7 @@
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import express from "express";
+import mongoose from "mongoose";
 import { envConstants } from "./constants/env.ts";
 import { connectWithMongoose } from "./config/mongoose.ts";
 import { requestLogger } from "./middleware/requestLogger.ts";
@@ -24,6 +25,18 @@ app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req, res) => {
   res.json({ message: "Hello from Express" });
+});
+
+app.get("/health", (_req, res) => {
+  const dbState = mongoose.connection.readyState;
+  // readyState: 0=disconnected, 1=connected, 2=connecting, 3=disconnecting
+  const isHealthy = dbState === 1;
+
+  res.status(isHealthy ? 200 : 503).json({
+    status: isHealthy ? "ok" : "degraded",
+    db: mongoose.STATES[dbState],
+    uptime: process.uptime(),
+  });
 });
 
 app.use("/students", studentsRouter);

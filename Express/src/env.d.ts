@@ -6,5 +6,8 @@ declare namespace NodeJS {
     readonly PORT?: string;
     readonly CLIENT_ORIGIN?: string;
     readonly JWT_SECRET?: string;
+    readonly CLOUDINARY_CLOUD_NAME?: string;
+    readonly CLOUDINARY_API_KEY?: string;
+    readonly CLOUDINARY_API_SECRET?: string;
   }
 }

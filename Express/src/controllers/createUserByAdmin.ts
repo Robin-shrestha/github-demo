@@ -1,21 +1,13 @@
-import path from "node:path";
-import { randomUUID } from "node:crypto";
 import multer from "multer";
 import type { Request, Response } from "express";
 import { createUser } from "../auth/authService.ts";
 import { BadRequest } from "../types/httpError.ts";
 import { validate } from "../middleware/validate.ts";
 import { createUserByAdminSchema, type CreateUserByAdminInput } from "../validation/userManagementSchemas.ts";
-
-const storage = multer.diskStorage({
-  destination: "uploads/",
-  filename(_req, file, cb) {
-    cb(null, `${randomUUID()}${path.extname(file.originalname)}`);
-  },
-});
+import { uploadToCloudinary } from "../config/cloudinary.ts";
 
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   fileFilter(_req, file, cb) {
     if (file.fieldname === "profilePic") {
       cb(null, file.mimetype.startsWith("image/"));
@@ -33,23 +25,31 @@ const uploadFields = upload.fields([
 
 async function handler(req: Request, res: Response): Promise<void> {
   const files = req.files as
-    { profilePic?: Express.Multer.File[]; idDocuments?: Express.Multer.File[] } | undefined;
+    | { profilePic?: Express.Multer.File[]; idDocuments?: Express.Multer.File[] }
+    | undefined;
 
-  const profilePic = files?.profilePic?.[0];
+  const profilePicFile = files?.profilePic?.[0];
 
-  if (!profilePic) {
+  if (!profilePicFile) {
     throw new BadRequest("No profile picture uploaded, or the file was not an image");
   }
+
+  const [profilePicResult, ...idDocResults] = await Promise.all([
+    uploadToCloudinary(profilePicFile.buffer, { folder: "users/profile-pics", resource_type: "image" }),
+    ...(files?.idDocuments ?? []).map((file) =>
+      uploadToCloudinary(file.buffer, { folder: "users/id-documents", resource_type: "auto" }),
+    ),
+  ]);
 
   const { role, ...input } = req.body as CreateUserByAdminInput;
 
   const user = await createUser(
     {
       ...input,
-      profilePic: `/uploads/${profilePic.filename}`,
-      idDocuments: files?.idDocuments?.map((file) => `/uploads/${file.filename}`),
+      profilePic: profilePicResult.secure_url,
+      idDocuments: idDocResults.map((r) => r.secure_url),
     },
-    role
+    role,
   );
 
   res.status(201).json(user);
