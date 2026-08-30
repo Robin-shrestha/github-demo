@@ -13,7 +13,6 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { ApiError } from "../api/httpClient";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
 const MAX_ID_DOCUMENTS = 10;

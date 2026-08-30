@@ -27,14 +27,27 @@ export function signRefreshToken(userId: string, tokenVersion: number): string {
   });
 }
 
+const isProduction = process.env.NODE_ENV === "production";
+
+// Cross-origin (Render frontend + backend on different subdomains) needs
+// SameSite=None, and browsers only honor SameSite=None when Secure is set.
+// Locally, frontend and backend are same-site (both localhost, just
+// different ports), so the looser dev settings are enough and avoid relying
+// on the browser's localhost-only exception for Secure cookies (Safari
+// doesn't grant it).
+const refreshTokenCookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? ("none" as const) : ("lax" as const),
+};
+
 export function setRefreshTokenCookie(res: Response, token: string): void {
   res.cookie(REFRESH_TOKEN_COOKIE, token, {
-    httpOnly: true,
-    sameSite: "lax",
+    ...refreshTokenCookieOptions,
     maxAge: REFRESH_TOKEN_MAX_AGE_MS,
   });
 }
 
 export function clearRefreshTokenCookie(res: Response): void {
-  res.clearCookie(REFRESH_TOKEN_COOKIE);
+  res.clearCookie(REFRESH_TOKEN_COOKIE, refreshTokenCookieOptions);
 }
